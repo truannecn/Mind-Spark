@@ -31,7 +31,8 @@ def onAppStart(app):
     app.mood = None
     app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
 
-    #textBox app variables
+    #textBox app variables    
+    app.name = 'Truanne'
     app.inBox = False
     app.entry = ''
     app.textBoxLeft = 50
@@ -82,6 +83,7 @@ def landingPage_onMouseMove(app, mouseX, mouseY):
 # JOURNAL ENTRY
 ######
 def journalEntry_redrawAll(app):
+    drawImage('jounralBackground.jpeg', 0, 0)
     makeTextBox(app)
     updateTextBox(app)
     if app.showMoods:
@@ -114,7 +116,8 @@ def journalEntry_onKeyPress(app, key):
             
 def makeTextBox(app):
     drawLabel(date.today(), app.textBoxLeft, app.textBoxTop-22, size=38, align='left', font='monospace', bold=True)
-    drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill=None)
+    # drawLabel(f'||  Hi, {app.name}', app.textBoxLeft + 270, app.textBoxTop-22, size=38, align='left', font='monospace', bold=True)
+    drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill='white', opacity=38)
     if len(app.entry) == 0 and len(app.entryList) == 0:
         drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 15, align='left', fill = 'gray', italic = True, size=20, font='monospace')
 
