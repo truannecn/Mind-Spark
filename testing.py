@@ -356,6 +356,9 @@ def drawCalendar_redrawAll(app):
     drawCalendar(app)        
 
 def drawCalendar(app):
+    #draw background
+    drawImage('calendarBg.webp', 0, 0)
+    
     #draws buttons that leads back to other pages.
     homeButtonOnCalendar(app)
     questButtonOnCalendar(app)
@@ -387,7 +390,7 @@ def drawCalendar(app):
     for row in range(rows):
         for col in range(7):
             left, top = app.width // 4 + boxWidth * col, app.height - boxHeight * (row + 1) - 100
-            drawRect(left, top, boxWidth, boxHeight, fill = None, border = 'black')
+            drawRect(left, top, boxWidth, boxHeight, fill = 'white', opacity = 55, border = 'black')
                 
     #draws all the day labels anmoodNumd mood images
     for day in range(lastDay):
