@@ -557,6 +557,8 @@ def selectDay(app, mX, mY):
         dRow = nRow - lRow
         dCol = nCol - lCol
         app.selectedDay = lastDay + 7 * dRow + dCol
+        if app.selectedDay < 1 or app.selectedDay > lastDay:
+            app.selectedDay = None
 
 def quest_redrawAll(app):
     drawImage('calendarBackground.png', 0, 0, width = app.width, height=app.height)
