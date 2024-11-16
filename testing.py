@@ -65,6 +65,9 @@ def onAppStart(app):
     #landing variables
     app.buttonRect = False
 
+    #quest variables
+    app.quests = ['Take a 10 minute walk outside', 'Meditate for 5 minutes', 'Listen to your favorite song!', 'Give someone a hug', 'Drink water!', 'Practice daily affirmations', 'Complete a 10 minute yoga session', 'Treat yourself to your favorite food', 'Tell someone you love them', 'Take a relaxing bath']
+
 ######
 # LANDING PAGE
 ######
@@ -366,6 +369,11 @@ def selectDay(app, mX, mY):
         dRow = nRow - lRow
         dCol = nCol - lCol
         app.selectedDay = lastDay + 7 * dRow + 7 * dCol
+
+def quest_redrawAll(app):
+    drawLabel("Completing these self care tasks can greatly improve your mood and your overall well-being!", app.width/2, 30, font='monospace', size=30, align='center')
+    drawLabel("Check back daily for new tasks!", app.width/2, 50, font='monospace', size=20, align='center')
+
 
 
 
