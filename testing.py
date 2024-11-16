@@ -525,23 +525,22 @@ def questButtons(app):
         drawRect(25, 160, 140, 40, align='left', fill = 'lightGreen', opacity=70)
 
 def quest_onMouseMove(app, mouseX, mouseY):
-    if 25<= mouseX <= 165:
-        if 100 <= mouseY <= 140:
-            app.questHomeIllum = True
-            app.questAnaIllum = False
-        elif 120 <= mouseY <= 200:
-            app.questAnaIllum = True
-            app.questHomeIllum = False
+    if 100 <= mouseY <= 140 and 25<= mouseX <= 165:
+        app.questHomeIllum = True
+        app.questAnaIllum = False
+    elif 120 <= mouseY <= 200 and 25<= mouseX <= 165:
+        app.questAnaIllum = True
+        app.questHomeIllum = False
     else:
         app.questHomeIllum = False
         app.questAnaIllum = False
 
 def quest_onMousePress(app, mouseX, mouseY):
-    if 25<= mouseX <= 165:
-        if 100 <= mouseY <= 140:
-            setActiveScreen('landingPage')
-        elif 120 <= mouseY <= 200:
-            setActiveScreen('drawCalendar')
+    if 100 <= mouseY <= 140 and 25<= mouseX <= 165:
+        setActiveScreen('landingPage')
+    elif 120 <= mouseY <= 200 and 25<= mouseX <= 165:
+        setActiveScreen('drawCalendar')
+
 
 # class Account():
 #     def __init__(self, username, password):
