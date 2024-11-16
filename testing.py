@@ -421,15 +421,15 @@ def drawCalendar(app):
     drawLabel('>', app.rightX, app.rightY, size = 50)
 
 def homeButtonOnCalendar(app):
-    drawRect(100, 50, 175, 50, align='center', fill = None, border='black')
+    drawRect(100, 50, 140, 40, align='center', fill = None, border='black')
     if app.illumHomeOnCalendar:
-        drawRect(100, 50, 175, 50, align='center', fill = 'lightGreen', opacity=70)
+        drawRect(100, 50, 140, 40, align='center', fill = 'lightGreen', opacity=70)
     drawLabel("Home", 100, 50, align='center', font='monospace', size=18)
     
 def questButtonOnCalendar(app):
-    drawRect(100, 110, 175, 50, align='center', fill = None, border='black')
+    drawRect(100, 110, 140, 40, align='center', fill = None, border='black')
     if app.illumQuestOnCalendar:
-        drawRect(100, 110, 175, 50, align='center', fill = 'lightGreen', opacity=70)
+        drawRect(100, 110, 140, 40, align='center', fill = 'lightGreen', opacity=70)
     drawLabel("Quest", 100, 110, align='center', font='monospace', size=18)
 
 def distance(x1, y1, x2, y2):
@@ -440,19 +440,19 @@ def drawCalendar_onMousePress(app, mouseX, mouseY):
     selectDay(app, mouseX, mouseY)
     
     #change screens
-    if (12.5 <= mouseX <= 187.5) and (25<= mouseY <= 75):
+    if (30 <= mouseX <= 170) and (30<= mouseY <= 70):
         setActiveScreen('landingPage')
         
-    if (12.5 <= mouseX <= 187.5) and (85<= mouseY <= 135):
+    if (30 <= mouseX <= 170) and (90 <= mouseY <= 130):
         setActiveScreen('quest')
 
 def drawCalendar_onMouseMove(app, mouseX, mouseY):
-    if (12.5 <= mouseX <= 187.5) and (25<= mouseY <= 75):
+    if (30 <= mouseX <= 170) and (30<= mouseY <= 70):
         app.illumHomeOnCalendar = True
     else:
         app.illumHomeOnCalendar = False
         
-    if (12.5 <= mouseX <= 187.5) and (85<= mouseY <= 135):
+    if (30 <= mouseX <= 170) and (90 <= mouseY <= 130):
         app.illumQuestOnCalendar = True
     else:
         app.illumQuestOnCalendar = False
@@ -515,9 +515,9 @@ def quest_redrawAll(app):
     questButtons(app)
 
 def questButtons(app):
-    drawRect(25, 100, 140, 40, align='left', fill = None, border='black')
+    drawRect(25, 80, 140, 40, fill = None, border='black')
     drawLabel('Home', 95, 100, align='center', font='monospace', size=20)
-    drawRect(25, 160, 140, 40, align='left', fill = None, border='black')
+    drawRect(25, 140, 140, 40, fill = None, border='black')
     drawLabel('Analytics', 95, 160, align='center', font='monospace', size=20)
     if app.questHomeIllum:
         drawRect(25, 100, 140, 40, align='left', fill = 'lightGreen', opacity=70)
@@ -525,10 +525,10 @@ def questButtons(app):
         drawRect(25, 160, 140, 40, align='left', fill = 'lightGreen', opacity=70)
 
 def quest_onMouseMove(app, mouseX, mouseY):
-    if 100 <= mouseY <= 140 and 25<= mouseX <= 165:
+    if 80 <= mouseY <= 120 and 25 <= mouseX <= 165:
         app.questHomeIllum = True
         app.questAnaIllum = False
-    elif 120 <= mouseY <= 200 and 25<= mouseX <= 165:
+    elif 140 <= mouseY <= 180 and 25<= mouseX <= 165:
         app.questAnaIllum = True
         app.questHomeIllum = False
     else:
@@ -536,9 +536,9 @@ def quest_onMouseMove(app, mouseX, mouseY):
         app.questAnaIllum = False
 
 def quest_onMousePress(app, mouseX, mouseY):
-    if 100 <= mouseY <= 140 and 25<= mouseX <= 165:
+    if 80 <= mouseY <= 120 and 25 <= mouseX <= 165:
         setActiveScreen('landingPage')
-    elif 120 <= mouseY <= 200 and 25<= mouseX <= 165:
+    elif 140 <= mouseY <= 180 and 25<= mouseX <= 165:
         setActiveScreen('drawCalendar')
 
 
