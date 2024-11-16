@@ -218,6 +218,8 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
             #app.calender[(int(x[0:4]), int(x[5:7]), int(x[9:11]))] = DailyEntry('')
             for segment in app.entryList:
                 app.cohesiveEntry += segment
+            if not app.cohesiveEntry:
+                app.cohesiveEntry = app.entry
             app.calender[app.currYear, app.currMonth, app.currDay] = DailyEntry(app.cohesiveEntry, app.mood)
         
         elif (mouseX < app.width/2+262.5 or mouseX > app.width/2+437.5):
@@ -452,7 +454,7 @@ def drawCalendar(app):
 
     #draws month and outside border
     left, top = app.width // 4, app.height - boxHeight * (row + 1) - 100
-    drawLabel(months[app.displayMonth] + " " + str(app.displayYear), app.width // 2, 200, size = 70)        
+    drawLabel(months[app.displayMonth] + " " + str(app.displayYear), app.width // 2, 200, size = 70)       
     drawRect(left, top, app.width // 2, boxHeight * (row + 1), fill = None, border = 'black', borderWidth = 4)
     
     #draws bumpers
@@ -479,14 +481,13 @@ def distance(x1, y1, x2, y2):
 def drawCalendar_onMousePress(app, mouseX, mouseY):
     #drawRect(app.width // 3, app.height // 5, app.width // 3, (app.height //5) * 3, fill = 'white')
     if app.selectedDay != None:
-        if (app.width // 3 <= mouseX <= 2 * (app.width // 3)) or (app.height // 5 <= mouseY <= 4 * (app.height // 5)):
+        if (app.width // 3 <= mouseX <= 2 * (app.width // 3)) and (app.height // 5 <= mouseY <= 4 * (app.height // 5)):
             hi = 1
         else:
-            app.selected = None
+            app.selectedDay = None
     else:
         bumpMonth(app, mouseX, mouseY)
         selectDay(app, mouseX, mouseY)
-    
     #change screens
     if (30 <= mouseX <= 170) and (30<= mouseY <= 70):
         setActiveScreen('landingPage')
