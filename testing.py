@@ -38,6 +38,8 @@ def onAppStart(app):
     app.textBoxTop = 150
     app.entryList = []
     app.showMoods = False
+    app.showSubmit = False
+    app.illumSubmit = False
 
     app.happy2 = 'smile.png'
     app.happy1 = 'smile (1).png'
@@ -86,10 +88,31 @@ def journalEntry_redrawAll(app):
     updateTextBox(app)
     if app.showMoods:
         drawMoods(app)
+    if app.showSubmit:
+        submitButton(app)
     
 def journalEntry_onMousePress(app, mouseX, mouseY):
     if 50<=mouseX<=app.width-50 and 50<=mouseY<=app.height/3:
             app.inBox = True
+
+    if app.showMoods:
+        if app.height/2 + 75 <= mouseY <= app.height/2 + 125:
+            if app.width/2-225<= mouseX <= app.width/2-175:
+                    app.showSubmit = True
+                    app.mood = 0
+            elif app.width/2-125 <= mouseX <= app.width/2-75 :
+                    app.mood = 1
+                    app.showSubmit = True
+            elif app.width/2-25 <= mouseX <= app.width/2 + 25:
+                    app.mood = 2
+                    app.showSubmit = True
+            elif app.width/2+75 <= mouseX <= app.width/2 + 125:
+                    app.mood = 3
+                    app.showSubmit = True
+            elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
+                    app.mood = 4
+                    app.showSubmit = True
+
             
             
 def journalEntry_onKeyPress(app, key):
@@ -126,15 +149,8 @@ def updateTextBox(app):
 
     drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=15, font='monospace')
 
-
-#####
-# MOODS
-#####
-def moods_redrawAll(app):
-    drawMoods(app)
-
-def moods_onMouseMove(app, mouseX, mouseY):
-    if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
+def journalEntry_onMouseMove(app, mouseX, mouseY):
+    if app.height/2 + 75 <= mouseY <= app.height/2 + 125:
         if app.width/2-225<= mouseX <= app.width/2-175:
             app.mood0w = 60
         elif app.width/2-125 <= mouseX <= app.width/2-75 :
@@ -147,36 +163,32 @@ def moods_onMouseMove(app, mouseX, mouseY):
             app.mood4w = 60
     else:
         app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
-            
-
+    if app.showSubmit:
+        if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
+            app.illumSubmit = True
+        else:
+            app.illumSubmit = False
 def drawMoods(app):
-    drawLabel("How are you feeling today?", app.width/2, app.height/2, align='center', size=20, bold=True)
-    drawCircle(app.width/2-200, app.height/2 + 50, app.mood0w/2, fill='blue', opacity=60)
-    drawCircle(app.width/2-100, app.height/2 + 50, app.mood1w/2, fill='lightBlue', opacity=60)
-    drawCircle(app.width/2, app.height/2 + 50, app.mood2w/2, fill='yellow', opacity=60)
-    drawCircle(app.width/2+100, app.height/2 + 50, app.mood3w/2, fill='lightGreen', opacity=60)
-    drawCircle(app.width/2+200, app.height/2 + 50, app.mood4w/2, fill='green', opacity=60)
-    drawImage(app.sad2, app.width/2 - 200, app.height/2 + 50, width=app.mood0w, height=app.mood0w, align='center')
-    drawImage(app.sad1, app.width/2 - 100, app.height/2 + 50, width=app.mood1w, height=app.mood1w, align='center')
-    drawImage(app.middle, app.width/2, app.height/2 + 50, width=app.mood2w, height=app.mood2w, align='center')
-    drawImage(app.happy1, app.width/2 + 100, app.height/2 + 50, width=app.mood3w, height=app.mood3w, align='center')
-    drawImage(app.happy2, app.width/2 + 200, app.height/2 + 50, width=app.mood4w, height=app.mood4w, align='center')
+    drawLabel("What was your overall mood today?", app.width/2, app.height/2 + 50, align='center', size=20, bold=True)
+    drawCircle(app.width/2-200, app.height/2 + 100, app.mood0w/2, fill='blue', opacity=60)
+    drawCircle(app.width/2-100, app.height/2 + 100, app.mood1w/2, fill='lightBlue', opacity=60)
+    drawCircle(app.width/2, app.height/2 + 100, app.mood2w/2, fill='yellow', opacity=60)
+    drawCircle(app.width/2+100, app.height/2 + 100, app.mood3w/2, fill='lightGreen', opacity=60)
+    drawCircle(app.width/2+200, app.height/2 + 100, app.mood4w/2, fill='green', opacity=60)
+    drawImage(app.sad2, app.width/2 - 200, app.height/2 + 100, width=app.mood0w, height=app.mood0w, align='center')
+    drawImage(app.sad1, app.width/2 - 100, app.height/2 + 100, width=app.mood1w, height=app.mood1w, align='center')
+    drawImage(app.middle, app.width/2, app.height/2 + 100, width=app.mood2w, height=app.mood2w, align='center')
+    drawImage(app.happy1, app.width/2 + 100, app.height/2 + 100, width=app.mood3w, height=app.mood3w, align='center')
+    drawImage(app.happy2, app.width/2 + 200, app.height/2 + 100, width=app.mood4w, height=app.mood4w, align='center')
 
     if app.mood != None and 0 <= app.mood <= 2:
         drawLabel("I'm sorry your day hasn't been going well. Here are some suggestions to make it better!", app.width/2, app.height/2 + 100, align = 'center')
-
-def onMousePressMood(app, mouseX, mouseY):
-    if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
-        if app.width/2-225<= mouseX <= app.width/2-175:
-                app.mood = 0
-        elif app.width/2-125 <= mouseX <= app.width/2-75 :
-                app.mood = 1
-        elif app.width/2-25 <= mouseX <= app.width/2 + 25:
-                app.mood = 2
-        elif app.width/2+75 <= mouseX <= app.width/2 + 125:
-                app.mood = 3
-        elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
-                app.mood = 4
+    
+def submitButton(app):
+    drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = None, border='black')
+    if app.illumSubmit:
+        drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = 'lightGreen', opacity=70)
+    drawLabel("Save", (app.width/2+350), (app.height/2+200), align='center', font='monospace', size=18)
 
 ######
 # CALENDAR VIEW
