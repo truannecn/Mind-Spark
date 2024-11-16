@@ -30,7 +30,6 @@ def onAppStart(app):
     
     app.hold = False
 
-    #mood images
     app.happy2 = 'smile.png'
     app.happy1 = 'smile (1).png'
     app.middle = 'sceptic.png'
@@ -81,8 +80,6 @@ def onMousePress(app, mouseX, mouseY):
                 app.mood = 3
             elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
                 app.mood = 4
-    # elif app.page == 'calendar view':
-
 
 #####
 # REDRAW ALL
@@ -91,7 +88,6 @@ def redrawAll(app):
     if app.page == 'journal entry':
         makeTextBox(app)
         updateTextBox(app)
-
     elif app.page == 'mood':
         drawMoods(app)
     elif app.page == 'calender view':
