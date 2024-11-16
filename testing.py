@@ -6,16 +6,17 @@ import calendar
 # ON APP START
 ######
 def onAppStart(app):
-    app.page = 'landing page'
+    app.page = 'mood'
     app.users = []
 
-    #login page app variables
-    app.username = ''
-    app.password = ''
-    app.currentUser = None
+    # #login page app variables
+    # app.username = ''
+    # app.password = ''
+    # app.currentUser = None
 
     #calendar page variables
     app.currMonth = 11
+    app.currentDay = 16
     app.currYear = 2024
     app.displayMonth = app.currMonth
     app.displayYear = app.currYear
@@ -132,7 +133,7 @@ def makeTextBox(app):
         drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 10, align='left', fill = 'gray', italic = True)
 
 def updateTextBox(app):
-    currentLine = app.textBoxTop
+    currentLine = app.textBoxTop 
     for i in range(len(app.entryList)):
         currentLine = (app.textBoxTop+10) + (15*i)
         drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15)
@@ -228,12 +229,12 @@ def drawCalender(app):
 def distance(x1, y1, x2, y2):
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
 
-class Account():
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
-        self.name = None
-        self.calender = UserCalender()
+# class Account():
+#     def __init__(self, username, password):
+#         self.username = username
+#         self.password = password
+#         self.name = None
+#         self.calender = UserCalender()
 
 class UserCalender():
     def __init__(self):
