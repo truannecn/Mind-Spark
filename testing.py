@@ -133,7 +133,7 @@ def makeTextBox(app):
         drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 10, align='left', fill = 'gray', italic = True)
 
 def updateTextBox(app):
-    currentLine = app.textBoxTop
+    currentLine = app.textBoxTop 
     for i in range(len(app.entryList)):
         currentLine = (app.textBoxTop+10) + (15*i)
         drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15)
