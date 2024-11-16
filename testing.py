@@ -9,6 +9,9 @@ class Calender():
     def __init__(self):
         self.calender = {}
 
+    def addEntry(self, date, entry):
+        self.calender[date] = entry
+
 class DailyEntry():
     def __init__(self, user):
         self.journalEntry = ''
