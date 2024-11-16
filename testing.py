@@ -25,6 +25,12 @@ def onAppStart(app):
     app.bumperRadius = 50
     app.selectedDay = None
 
+    app.happy2 = 'smile.png'
+    app.happy1 = 'smile (1).png'
+    app.middle = 'sceptic.png'
+    app.sad1 = 'sceptic (1).png'
+    app.sad2 = 'crying.png'
+
     #user variables
     app.calender = {}
 
@@ -48,17 +54,7 @@ def onAppStart(app):
     app.popupButton2 = False
     app.popupButton3 = False
 
-    app.happy2 = 'smile.png'
-    app.happy1 = 'smile (1).png'
-    app.middle = 'sceptic.png'
-    app.sad1 = 'sceptic (1).png'
-    app.sad2 = 'crying.png'
-
-    app.happy2 = 'smile.png'
-    app.happy1 = 'smile (1).png'
-    app.middle = 'sceptic.png'
-    app.sad1 = 'sceptic (1).png'
-    app.sad2 = 'crying.png'
+    
 
     app.wallpaper = 'converted_image.png'
     
@@ -129,6 +125,8 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
         if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
             app.cover = True
             app.popup = True
+            x = datetime.datetime.now()
+            app.calender[(int(x[0:4]), int(x[5:7]), int(x[9:11]))] = DailyEntry('')
 
     if app.popupButton2:
         setActiveScreen('drawCalendar')
@@ -295,8 +293,8 @@ def drawCalendar(app):
         dailyEntry = app.calender.get((app.displayYear, app.displayMonth, currDay), None)
         if dailyEntry != None:
             dailyMood = dailyEntry.getMood()
-            dimension = 0.7 * min(boxWidth, boxHeight)
-            drawImage(dailyMood, (boxWidth // 2) + left, top + (boxHeight // 2), dimension, dimension, align = 'center')
+            dimension = 0.5 * min(boxWidth, boxHeight)
+            drawImage(dailyMood, (boxWidth // 2) + left, top + (boxHeight // 2), width=dimension, height=dimension, align = 'center')
         currDay -= 1
         currDayOfWeek = (currDayOfWeek - 1) % 7
         if currDayOfWeek == 6:
