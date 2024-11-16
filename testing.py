@@ -8,6 +8,13 @@ from datetime import datetime
 import random
 
 ######
+#making data for videa
+######
+def randomMood():
+    L = ['smile.png', 'smile (1).png', 'sceptic.png', 'sceptic (1).png', 'crying.png']
+    return random.choice(L)
+
+######
 # ON APP START
 ######
 def onAppStart(app):
@@ -37,6 +44,11 @@ def onAppStart(app):
 
     #user variables
     app.calender = {}
+    for nov in range(1, 16):
+        app.calender[(2024, 11, nov)] = DailyEntry('decent day', randomMood())
+    for oct in range(1, 32):
+        app.calender[(2024, 10, oct)] = DailyEntry('ok day', randomMood())
+
     app.gotName = False
     app.name = ''
     app.nameBoxLeft = app.width/2 + 200
@@ -359,7 +371,27 @@ def makePopUp(app):
 ######
 
 def drawCalendar_redrawAll(app):
-    drawCalendar(app)        
+    drawCalendar(app)
+    if app.selectedDay == None:
+        pass
+    if app.selectedDay != None:
+        drawPopup(app)
+        homeButtonOnCalendar(app)
+        questButtonOnCalendar(app)
+
+def drawPopup(app):
+    if app.selectedDay == None:
+        pass
+    entryFromDay = app.calender.get((app.displayYear, app.displayMonth, app.selectedDay), None)
+    if entryFromDay == None:
+        pass
+    drawRect(0, 0, app.width, app.height, fill = 'black', opacity = 80)
+    drawRect(app.width // 3, app.height // 5, app.width // 3, (app.height //5) * 3, fill = 'white')
+    entryFromDay = app.calender.get((app.displayYear, app.displayMonth, app.selectedDay), None)   
+    displayEntry = entryFromDay.getJournalEntry()[:10]
+    if len(entryFromDay.getJournalEntry()) > len(displayEntry):
+        displyEntry += '...'           
+    drawLabel(displayEntry, app.width // 2, (app.height // 5) * 2, size = 18)        
 
 def drawCalendar(app):
     #draw background
@@ -398,7 +430,7 @@ def drawCalendar(app):
             left, top = app.width // 4 + boxWidth * col, app.height - boxHeight * (row + 1) - 100
             drawRect(left, top, boxWidth, boxHeight, fill = 'white', opacity = 55, border = 'black')
                 
-    #draws all the day labels anmoodNumd mood images
+    #draws all the day labels and mood images
     for day in range(lastDay):
         left, top = app.width // 4 + currDayOfWeek * boxWidth, app.height - (currWeek + 1) * boxHeight - 100
         drawRect(left, top, boxWidth, boxHeight, fill=None, border='black')
@@ -445,8 +477,15 @@ def distance(x1, y1, x2, y2):
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
 
 def drawCalendar_onMousePress(app, mouseX, mouseY):
-    bumpMonth(app, mouseX, mouseY)
-    selectDay(app, mouseX, mouseY)
+    #drawRect(app.width // 3, app.height // 5, app.width // 3, (app.height //5) * 3, fill = 'white')
+    if app.selectedDay != None:
+        if (app.width // 3 <= mouseX <= 2 * (app.width // 3)) or (app.height // 5 <= mouseY <= 4 * (app.height // 5)):
+            hi = 1
+        else:
+            app.selected = None
+    else:
+        bumpMonth(app, mouseX, mouseY)
+        selectDay(app, mouseX, mouseY)
     
     #change screens
     if (30 <= mouseX <= 170) and (30<= mouseY <= 70):
@@ -505,7 +544,7 @@ def selectDay(app, mX, mY):
         boxHeight = boxWidth
 
     lRow = rows - 1
-    lCol = 6
+    lCol = lastDayOfMonth
     left = app.width // 4
     bottom = app.height - 100
 
@@ -514,7 +553,7 @@ def selectDay(app, mX, mY):
         nCol = (mX - left) // boxWidth
         dRow = nRow - lRow
         dCol = nCol - lCol
-        app.selectedDay = lastDay + 7 * dRow + 7 * dCol
+        app.selectedDay = lastDay + 7 * dRow + dCol
 
 def quest_redrawAll(app):
     drawImage('calendarBackground.png', 0, 0, width = app.width, height=app.height)
