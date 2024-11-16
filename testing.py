@@ -21,7 +21,7 @@ def onAppStart(app):
     #calendar page variables
     app.currYear = int(str(date.today())[0:4])
     app.currMonth = int(str(date.today())[5:7])
-    app.currDay = int(str(date.today())[9:11])
+    app.currDay = int(str(date.today())[8:11])
     app.displayMonth = app.currMonth
     app.displayYear = app.currYear
     app.leftX, app.leftY = 433, 200
@@ -52,6 +52,7 @@ def onAppStart(app):
     # Get the current time
     # Extract the hour
     app.now = datetime.now()
+    # Extract the hour
     app.currHour = app.now.hour
     if 5 <= app.currHour < 12:
         app.stateOfDay = "morning"
@@ -499,7 +500,7 @@ def selectDay(app, mX, mY):
 
     if (left <= mX <= left + (boxWidth * 7)) and (bottom - (boxHeight * rows) <= mY <= bottom):
         nRow = rows - ((bottom - mY) // boxHeight) - 1
-        nCol = (mX - L) // boxWidth
+        nCol = (mX - left) // boxWidth
         dRow = nRow - lRow
         dCol = nCol - lCol
         app.selectedDay = lastDay + 7 * dRow + 7 * dCol
