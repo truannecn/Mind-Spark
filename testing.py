@@ -116,7 +116,7 @@ def makeTextBox(app):
     drawLabel(date.today(), app.textBoxLeft, app.textBoxTop-22, size=38, align='left', font='monospace', bold=True)
     drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill=None)
     if len(app.entry) == 0 and len(app.entryList) == 0:
-        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 10, align='left', fill = 'gray', italic = True, size=17)
+        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 15, align='left', fill = 'gray', italic = True, size=20, font='monospace')
 
 def updateTextBox(app):
     currentLine = app.textBoxTop 
