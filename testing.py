@@ -2,7 +2,7 @@ from cmu_graphics import *
 import string
 import calendar
 from datetime import date
-import datetime
+from datetime import datetime
 import random
 
 ######
@@ -66,6 +66,8 @@ def onAppStart(app):
     app.showMoods = False
     app.showSubmit = False
     app.illumSubmit = False
+    app.illumHomeOnCalendar = False
+    app.illumQuestOnCalendar = False
     app.cover = False
     app.popup = False
     app.popupButton1 = False
@@ -188,7 +190,7 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
         if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
             app.cover = True
             app.popup = True
-            x = datetime.datetime.now()
+            x = datetime.now()
             #app.calender[(int(x[0:4]), int(x[5:7]), int(x[9:11]))] = DailyEntry('')
 
     if app.popupButton2:
@@ -326,6 +328,12 @@ def drawCalendar_redrawAll(app):
     drawCalendar(app)        
 
 def drawCalendar(app):
+    #draws buttons that leads back to other pages.
+    homeButtonOnCalendar(app)
+    questButtonOnCalendar(app)
+    
+    
+    
     #initializes relevant variables
     months = ['fill', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     boxWidth = app.width // 14
@@ -383,13 +391,43 @@ def drawCalendar(app):
     drawLabel('<', app.leftX, app.leftY, size = 50)
     drawCircle(app.rightX, app.rightY, app.bumperRadius, opacity = 50)
     drawLabel('>', app.rightX, app.rightY, size = 50)
+
+def homeButtonOnCalendar(app):
+    drawRect(100, 50, 175, 50, align='center', fill = None, border='black')
+    if app.illumHomeOnCalendar:
+        drawRect(100, 50, 175, 50, align='center', fill = 'lightGreen', opacity=70)
+    drawLabel("Home", 100, 50, align='center', font='monospace', size=18)
     
+def questButtonOnCalendar(app):
+    drawRect(100, 110, 175, 50, align='center', fill = None, border='black')
+    if app.illumQuestOnCalendar:
+        drawRect(100, 110, 175, 50, align='center', fill = 'lightGreen', opacity=70)
+    drawLabel("Quest", 100, 110, align='center', font='monospace', size=18)
+
 def distance(x1, y1, x2, y2):
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
 
-def onMousePressCalendar(app, mouseX, mouseY):
+def drawCalendar_onMousePress(app, mouseX, mouseY):
     bumpMonth(app, mouseX, mouseY)
     selectDay(app, mouseX, mouseY)
+    
+    #change screens
+    if (12.5 <= mouseX <= 187.5) and (25<= mouseY <= 75):
+        setActiveScreen('landingPage')
+        
+    if (12.5 <= mouseX <= 187.5) and (85<= mouseY <= 135):
+        setActiveScreen('quest')
+
+def drawCalendar_onMouseMove(app, mouseX, mouseY):
+    if (12.5 <= mouseX <= 187.5) and (25<= mouseY <= 75):
+        app.illumHomeOnCalendar = True
+    else:
+        app.illumHomeOnCalendar = False
+        
+    if (12.5 <= mouseX <= 187.5) and (85<= mouseY <= 135):
+        app.illumQuestOnCalendar = True
+    else:
+        app.illumQuestOnCalendar = False
 
 def bumpMonth(app, mouseX, mouseY):
     app.displayMonth -= 1
