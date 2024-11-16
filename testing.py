@@ -2,7 +2,7 @@ from cmu_graphics import *
 import string
 import calendar
 from datetime import date
-import datetime
+from datetime import datetime
 import random
 
 ######
@@ -188,7 +188,7 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
         if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
             app.cover = True
             app.popup = True
-            x = datetime.datetime.now()
+            x = datetime.now()
             #app.calender[(int(x[0:4]), int(x[5:7]), int(x[9:11]))] = DailyEntry('')
 
     if app.popupButton2:
@@ -442,9 +442,10 @@ def selectDay(app, mX, mY):
         app.selectedDay = lastDay + 7 * dRow + 7 * dCol
 
 def quest_redrawAll(app):
-    drawLabel("Completing these self care tasks can greatly improve your mood and your overall well-being!", app.width/2, 30, font='monospace', size=30, align='center')
-    drawLabel("Check back daily for new tasks!", app.width/2, 50, font='monospace', size=20, align='center')
-    drawLabel(f"Daily Quest: {app.quests[app.i]}", app.width/2, app.height/2, font='monspace', size=30, align='center')
+    drawImage('calendarBackground.png', 0, 0, width = app.width, height=app.height)
+    drawLabel("Completing these self care tasks can greatly improve your mood and your overall well-being!", app.width/2, 50, font='monospace', size=25, align='center')
+    drawLabel("Check back daily for new tasks!", app.width/2, 80, font='monospace', size=20, align='center')
+    drawLabel(f"Daily Quest: {app.quests[app.i]}", app.width/2, app.height/2, font='monospace', size=30, align='center')
 
 
 
