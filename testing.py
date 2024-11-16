@@ -26,7 +26,7 @@ def onAppStart(app):
     app.selectedDay = None
 
     #user variables
-    app.calender = UserCalender()
+    app.calender = {}
 
     #mood app variables
     app.mood = None
@@ -287,11 +287,16 @@ def drawCalendar(app):
             left, top = app.width // 4 + boxWidth * col, app.height - boxHeight * (row + 1) - 100
             drawRect(left, top, boxWidth, boxHeight, fill = None, border = 'black')
                 
-    #draws all the day labels
+    #draws all the day labels and mood images
     for day in range(lastDay):
         left, top = app.width // 4 + currDayOfWeek * boxWidth, app.height - (currWeek + 1) * boxHeight - 100
         drawRect(left, top, boxWidth, boxHeight, fill=None, border='black')
         drawLabel(str(currDay), left + 8, top + 8, align = 'left-top', size = 18)
+        dailyEntry = app.calender.get((app.displayYear, app.displayMonth, currDay), None)
+        if dailyEntry != None:
+            dailyMood = dailyEntry.getMood()
+            dimension = 0.7 * min(boxWidth, boxHeight)
+            drawImage(dailyMood, (boxWidth // 2) + left, top + (boxHeight // 2), dimension, dimension, align = 'center')
         currDay -= 1
         currDayOfWeek = (currDayOfWeek - 1) % 7
         if currDayOfWeek == 6:
@@ -384,26 +389,29 @@ def quest_redrawAll(app):
 #         self.name = None
 #         self.calender = UserCalender()
 
-class UserCalender():
-    def __init__(self):
-        self.calender = {}
+# class UserCalender():
+#     def __init__(self):
+#         self.calender = {}
 
-    def addEntry(self, date, entry):
-        self.calender[date] = entry
+#     def addEntry(self, date, entry):
+#         self.calender[date] = entry
 
-    def getEntry(self, date):
-        return self.calender.get(date, None)
+#     def getEntry(self, date):
+#         return self.calender.get(date, None)
 
 class DailyEntry():
-    def __init__(self, user):
-        self.journalEntry = ''
-        self.mood = None
+    def __init__(self, journalEntry, mood):
+        self.journalEntry = journalEntry
+        self.mood = mood
 
     def setJournalEntry(self, journalEntry):
         self.jounalEntry = journalEntry
 
     def getJournalEntry(self):
         return self.journalEntry
+
+    def getMood(self):
+        return self.mood
 
 def main():
     runAppWithScreens(initialScreen='landingPage')
