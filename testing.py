@@ -35,13 +35,29 @@ def onAppStart(app):
 
     #user variables
     app.calender = {}
+    app.gotName = False
+    app.name = ''
+    app.nameBoxLeft = app.width/2 + 200
+    app.nameBoxTop = app.height/2 + 200
+    app.inNameBox = False
 
     #mood app variables
     app.mood = None
     app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
 
-    #textBox app variables    
-    app.name = 'Truanne'
+    #textBox app variables  
+      
+    # Get the current time
+    app.now = datetime.now()
+    # Extract the hour
+    app.currHour = app.now.hour
+    if 5 <= app.currHour < 12:
+        app.stateOfDay = "morning"
+    elif 12 <= app.currHour < 18:
+        app.stateOfDay = "afternoon"
+    else:
+        app.stateOfDay = "night"
+    
     app.inBox = False
     app.entry = ''
     app.textBoxLeft = 50
@@ -74,21 +90,63 @@ def landingPage_redrawAll(app):
     drawImage('converted_image.png', 0, 0)
     imageWidth, imageHeight = getImageSize('mindSpark.png')
     drawImage('mindSpark.png', app.width/2 - 375 , app.height/2+100, width = imageWidth/2, height = imageHeight/2, align='center')
-    drawLabel("Welcome! We are glad you are here. How do you feel today?", app.width/2 + 350, app.height/2 + 100, font='monospace', size=21, italic=True)
-    drawRect((app.width/2+350), (app.height/2+175), 225, 50, align='center', fill = None, border='black')
-    if app.buttonRect:
-        drawRect((app.width/2+350), (app.height/2+175), 225, 50, align='center', fill = 'lightGreen', opacity=70)
-    drawLabel("Begin Journaling", (app.width/2+350), (app.height/2+175), align='center', font='monospace', size=18)
-    
+    if not app.gotName:
+        drawLabel("Welcome to Mind Spark", app.width/2 + 325, app.height/2 + 50, font='monospace', size=21, italic=True, bold = True)
+        drawLabel("your central hub for mental wellness, growth, and support!", app.width/2 + 325, app.height/2 + 70, font='monospace', size=21, italic=True, bold = True)
+
+        drawLabel("To begin, click below, and enter your name", app.width/2 + 325, app.height/2 + 110, font='monospace', size=21, italic=True, bold = True)
+        if app.name != '':
+            drawLabel("(Press enter to continue)", app.width/2 + 325, app.height/2 + 130, font='monospace', size=15, italic=True, bold = True)
+        makeNameTextBox(app)
+        updateNameTextBox(app)
+        
+        
+    if app.gotName:
+        drawLabel(f'Welcome, {app.name}! We are glad you are here.', app.width/2 + 350, app.height/2 + 100, font='monospace', size=21, italic=True, bold = True)
+        drawLabel(f'How do you feel today?', app.width/2 + 350, app.height/2 + 123, font='monospace', size=21, italic=True, bold = True)
+        drawRect((app.width/2+350), (app.height/2+175), 225, 50, align='center', fill = None, border='black')
+        if app.buttonRect:
+            drawRect((app.width/2+350), (app.height/2+175), 225, 50, align='center', fill = 'lightGreen', opacity=70)
+        drawLabel("Begin Journaling", (app.width/2+350), (app.height/2+175), align='center', font='monospace', size=18)
+
+def makeNameTextBox(app):
+    drawRect(app.width/2 + 200, app.height/2 + 200, 270, 43, border='black', fill='white', opacity=38)
+    if app.name == '':
+        drawLabel("What should we call you?", app.width/2 + 210, app.height/2 + 220, align='left', fill = 'gray', italic = True, size=15, font='monospace')
+
+def updateNameTextBox(app):
+    drawLabel(app.name, app.width/2 + 210, app.height/2 + 220, align='left', fill='black',size=20, font='monospace')
+
+def landingPage_onKeyPress(app, key):
+    if app.inNameBox:
+        if key == 'space':
+            app.name += " "
+        elif key == 'backspace':
+            if len(app.name) != 0:
+                    app.name = app.name[:-1]
+            
+        elif key in string.ascii_letters or key in string.digits or key in string.punctuation:
+            app.name += key
+        elif key == 'enter' and app.name != '':
+            app.gotName = True
+
 def landingPage_onMousePress(app, mouseX, mouseY):
-    if (app.width/2+237.5 <= mouseX <= app.width/2+462.5) and (app.height/2+150<= mouseY <= app.height/2+200):
-        setActiveScreen('journalEntry')
+    if not app.gotName:
+        if (app.width/2 + 200 <= mouseX <= app.width/2 + 470) and (app.height/2 + 200<= mouseY <= app.height/2 + 243):
+            app.inNameBox = True
+            
+    if app.gotName:
+        if (app.width/2+237.5 <= mouseX <= app.width/2+462.5) and (app.height/2+150<= mouseY <= app.height/2+200):
+            setActiveScreen('journalEntry')
+
+
+
 def landingPage_onMouseMove(app, mouseX, mouseY):
     if (app.width/2+237.5 <= mouseX <= app.width/2+462.5) and (app.height/2+150<= mouseY <= app.height/2+200):
         app.buttonRect = True
     else:
         app.buttonRect = False
-
+        
 ######
 # JOURNAL ENTRY
 ######
@@ -103,7 +161,9 @@ def journalEntry_redrawAll(app):
     makePopUp(app)
     
 def journalEntry_onMousePress(app, mouseX, mouseY):
-    if 50<=mouseX<=app.width-50 and 50<=mouseY<=app.height/3:
+    #app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3
+    
+    if app.textBoxLeft<=mouseX<=(app.textBoxLeft + app.width-50) and app.textBoxTop<=mouseY<=(app.textBoxTop + app.height/3):
             app.inBox = True
 
     if app.showMoods:
@@ -162,7 +222,8 @@ def journalEntry_onKeyPress(app, key):
             
 def makeTextBox(app):
     drawLabel(date.today(), app.textBoxLeft, app.textBoxTop-22, size=38, align='left', font='monospace', bold=True)
-    # drawLabel(f'||  Hi, {app.name}', app.textBoxLeft + 270, app.textBoxTop-22, size=38, align='left', font='monospace', bold=True)
+
+    drawLabel(f'|  Good {app.stateOfDay}, {app.name}!', app.textBoxLeft + 270, app.textBoxTop-22, size=34, align='left', font='monospace', bold=True)
     drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill='white', opacity=38)
     if len(app.entry) == 0 and len(app.entryList) == 0:
         drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 15, align='left', fill = 'gray', italic = True, size=20, font='monospace')
