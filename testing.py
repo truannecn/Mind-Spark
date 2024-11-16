@@ -17,9 +17,9 @@ def onAppStart(app):
     # app.currentUser = None
 
     #calendar page variables
-    app.currYear = int(datetime.datetime.now()[0:4])
-    app.currMonth = int(datetime.datetime.now()[5:7])
-    app.currentDay = int(datetime.datetime.now()[9:11])
+    app.currYear = int(str(datetime.date.today())[0:4])
+    app.currMonth = int(str(datetime.date.today())[5:7])
+    app.currentDay = int(str(datetime.date.today())[9:11])
     app.displayMonth = app.currMonth
     app.displayYear = app.currYear
     app.leftX, app.leftY = 433, 200
