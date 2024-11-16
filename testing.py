@@ -302,8 +302,21 @@ def drawMoods(app):
     drawImage(app.happy1, app.width/2 + 100, app.height/2 + 100, width=app.mood3w, height=app.mood3w, align='center')
     drawImage(app.happy2, app.width/2 + 200, app.height/2 + 100, width=app.mood4w, height=app.mood4w, align='center')
 
-    if app.mood != None and 0 <= app.moodNum <= 2:
-        drawLabel("We're sorry your day hasn't been going well. We hope it improves!", app.width/2, app.height/2 + 150, align = 'center', font='monospace', size=15)
+    if app.mood != None:
+        if app.moodNum == 0:
+            drawLabel("We're sorry its been such a bad day :( Try visiting the quests page for some fun feel-good activities!", app.width/2, app.height/2 + 150, align = 'center', font='monospace', size=15)
+            
+        elif app.moodNum == 1:
+            drawLabel("We're sorry your day hasn't been going too well. Try visiting the quests page for some fun feel-good activities!", app.width/2, app.height/2 + 150, align = 'center', font='monospace', size=15)
+
+        elif app.moodNum == 2:
+            drawLabel("Neutral days are completely normal. Try visiting the quests to make it a good day today!", app.width/2, app.height/2 + 150, align = 'center', font='monospace', size=15)
+        
+        elif app.moodNum == 3:
+            drawLabel("It's a good day today! Try visiting the quests to make your day even better!", app.width/2, app.height/2 + 150, align = 'center', font='monospace', size=15)
+            
+        elif app.moodNum == 4:
+            drawLabel("We are so happy to hear that you're doing amazing! Try visiting the quests to make your day out of this world!", app.width/2, app.height/2 + 150, align = 'center', font='monospace', size=15)
     
 def submitButton(app):
     drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = None, border='black')
