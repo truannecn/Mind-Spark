@@ -19,6 +19,7 @@ def onAppStart(app):
 
     #mood app variables
     app.mood = None
+    app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
 
     #textBox app variables
     app.inBox = False
@@ -90,7 +91,6 @@ def redrawAll(app):
     if app.page == 'journal entry':
         makeTextBox(app)
         updateTextBox(app)
-        drawMoods(app)
 
     elif app.page == 'mood':
         drawMoods(app)
@@ -112,20 +112,35 @@ def updateTextBox(app):
 
 def drawMoods(app):
     drawLabel("How are you feeling today?", app.width/2, app.height/2, align='center', size=20, bold=True)
-    drawCircle(app.width/2-200, app.height/2 + 50, 25, fill='blue', opacity=60)
-    drawCircle(app.width/2-100, app.height/2 + 50, 25, fill='lightBlue', opacity=60)
-    drawCircle(app.width/2, app.height/2 + 50, 25, fill='yellow', opacity=60)
-    drawCircle(app.width/2+100, app.height/2 + 50, 25, fill='lightGreen', opacity=60)
-    drawCircle(app.width/2+200, app.height/2 + 50, 25, fill='green', opacity=60)
-    drawImage(app.sad2, app.width/2 - 200, app.height/2 + 50, width=50, height=50, align='center')
-    drawImage(app.sad1, app.width/2 - 100, app.height/2 + 50, width=50, height=50, align='center')
-    drawImage(app.middle, app.width/2, app.height/2 + 50, width=50, height=50, align='center')
-    drawImage(app.happy1, app.width/2 + 100, app.height/2 + 50, width=50, height=50, align='center')
-    drawImage(app.happy2, app.width/2 + 200, app.height/2 + 50, width=50, height=50, align='center')
+    drawCircle(app.width/2-200, app.height/2 + 50, app.mood0w/2, fill='blue', opacity=60)
+    drawCircle(app.width/2-100, app.height/2 + 50, app.mood1w/2, fill='lightBlue', opacity=60)
+    drawCircle(app.width/2, app.height/2 + 50, app.mood2w/2, fill='yellow', opacity=60)
+    drawCircle(app.width/2+100, app.height/2 + 50, app.mood3w/2, fill='lightGreen', opacity=60)
+    drawCircle(app.width/2+200, app.height/2 + 50, app.mood4w/2, fill='green', opacity=60)
+    drawImage(app.sad2, app.width/2 - 200, app.height/2 + 50, width=app.mood0w, height=app.mood0w, align='center')
+    drawImage(app.sad1, app.width/2 - 100, app.height/2 + 50, width=app.mood1w, height=app.mood1w, align='center')
+    drawImage(app.middle, app.width/2, app.height/2 + 50, width=app.mood2w, height=app.mood2w, align='center')
+    drawImage(app.happy1, app.width/2 + 100, app.height/2 + 50, width=app.mood3w, height=app.mood3w, align='center')
+    drawImage(app.happy2, app.width/2 + 200, app.height/2 + 50, width=app.mood4w, height=app.mood4w, align='center')
 
     if app.mood != None and 0 <= app.mood <= 2:
         drawLabel("I'm sorry your day hasn't been going well. Here are some suggestions to make it better!", app.width/2, app.height/2 + 100, align = 'center')
 
+def onMouseMove(app, mouseX, mouseY):
+    if app.page == 'mood':
+        if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
+            if app.width/2-225<= mouseX <= app.width/2-175:
+                app.mood0w = 60
+            elif app.width/2-125 <= mouseX <= app.width/2-75 :
+                app.mood1w = 60
+            elif app.width/2-25 <= mouseX <= app.width/2 + 25:
+                app.mood2w = 60
+            elif app.width/2+75 <= mouseX <= app.width/2 + 125:
+                app.mood3w = 60
+            elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
+                app.mood4w = 60
+        else:
+            app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
 
 def drawCalender(app):
     months = {'January': 31, 'February': (28, 29), 'March': 31, 'April': 30, 'May': 31, 'June': 30, 'July': 31, 'August': 31, 'September': 30, 'October': 31, 'November': 30, 'December': 31}
