@@ -10,5 +10,3 @@ class Entry:
     
     # def enterMood(self, )
     
-    
-cmu_graphics.run()

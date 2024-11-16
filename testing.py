@@ -26,7 +26,9 @@ def onAppStart(app):
     app.entry = ''
     app.textBoxLeft = 50
     app.textBoxTop = 50
-    app.entryList = ["aldkfjadslkfjasklfjlaskjf"]
+    app.entryList = []
+    
+    app.hold = False
 
 
 
@@ -35,14 +37,23 @@ def onAppStart(app):
 ######
 def onKeyPress(app, key):
     if app.inBox:
+        if len(app.entry) >= 115:
+            app.entryList.append(app.entry)
+            app.entry = ''
         if key == 'space':
             app.entry += " "
         elif key == 'backspace':
-            app.entry = app.entry[:-1]
-        elif key.isalpha() or key.isdigit() or key in string.punctuation:
+            if len(app.entryList) != 0 or len(app.entry) != 0:
+                if len(app.entry) > 0:
+                    app.entry = app.entry[:-1]
+                elif len(app.entry) == 0:
+                    app.entry = app.entryList[0]
+                    app.entryList.pop()
+                    app.entry = app.entry[:-1]
+            
+        elif key in string.ascii_letters or key in string.digits or key in string.punctuation:
             app.entry += key
-        else:
-            app.entry = app.entry
+            
 
 #####
 # ON MOUSE PRESS
@@ -65,16 +76,16 @@ def redrawAll(app):
 
 def makeTextBox(app):
     drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill=None)
-    if len(app.entry) == 0:
-        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 10, align='left', fill = 'gray', italic = True)
+    if len(app.entry) == 0 and len(app.entryList) == 0:
+        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 15, align='left', fill = 'gray', italic = True, size = 20)
 
 def updateTextBox(app):
     currentLine = app.textBoxTop
     for i in range(len(app.entryList)):
         currentLine = (app.textBoxTop+10) + (15*i)
-        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15)
+        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 20, font = 'monospace')
 
-    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=15)
+    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black', size = 20, font = 'monospace')
 
 def drawMoods(app):
     moods
