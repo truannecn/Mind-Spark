@@ -2,6 +2,7 @@ from cmu_graphics import *
 import string
 import calendar
 from datetime import date
+import random
 
 ######
 # ON APP START
@@ -376,6 +377,7 @@ def selectDay(app, mX, mY):
 def quest_redrawAll(app):
     drawLabel("Completing these self care tasks can greatly improve your mood and your overall well-being!", app.width/2, 30, font='monospace', size=30, align='center')
     drawLabel("Check back daily for new tasks!", app.width/2, 50, font='monospace', size=20, align='center')
+
 
 
 
