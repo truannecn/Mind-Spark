@@ -27,7 +27,7 @@ def onAppStart(app):
     app.selectedDay = None
 
     #user variables
-    app.calender = UserCalender()
+    app.calender = {}
     app.gotName = False
     app.name = ''
     app.nameBoxLeft = app.width/2 + 200
@@ -59,6 +59,11 @@ def onAppStart(app):
     app.showMoods = False
     app.showSubmit = False
     app.illumSubmit = False
+    app.cover = False
+    app.popup = False
+    app.popupButton1 = False
+    app.popupButton2 = False
+    app.popupButton3 = False
 
     app.happy2 = 'smile.png'
     app.happy1 = 'smile (1).png'
@@ -152,6 +157,7 @@ def journalEntry_redrawAll(app):
         drawMoods(app)
     if app.showSubmit:
         submitButton(app)
+    makePopUp(app)
     
 def journalEntry_onMousePress(app, mouseX, mouseY):
     #app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3
@@ -176,6 +182,14 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
             elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
                     app.mood = 4
                     app.showSubmit = True
+    
+    if app.illumSubmit:
+        if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
+            app.cover = True
+            app.popup = True
+
+    if app.popupButton2:
+        setActiveScreen('drawCalendar')
 
             
             
@@ -219,14 +233,19 @@ def journalEntry_onMouseMove(app, mouseX, mouseY):
     if app.height/2 + 75 <= mouseY <= app.height/2 + 125:
         if app.width/2-225<= mouseX <= app.width/2-175:
             app.mood0w = 60
-        elif app.width/2-125 <= mouseX <= app.width/2-75 :
+            app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
+        if app.width/2-125 <= mouseX <= app.width/2-75 :
             app.mood1w = 60
-        elif app.width/2-25 <= mouseX <= app.width/2 + 25:
+            app.mood0w = app.mood2w = app.mood3w = app.mood4w = 50
+        if app.width/2-25 <= mouseX <= app.width/2 + 25:
             app.mood2w = 60
-        elif app.width/2+75 <= mouseX <= app.width/2 + 125:
+            app.mood1w = app.mood0w = app.mood3w = app.mood4w = 50
+        if app.width/2+75 <= mouseX <= app.width/2 + 125:
             app.mood3w = 60
-        elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
+            app.mood1w = app.mood2w = app.mood0w = app.mood4w = 50
+        if app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
             app.mood4w = 60
+            app.mood1w = app.mood2w = app.mood3w = app.mood0w = 50
     else:
         app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
     if app.showSubmit:
@@ -234,9 +253,24 @@ def journalEntry_onMouseMove(app, mouseX, mouseY):
             app.illumSubmit = True
         else:
             app.illumSubmit = False
-            
+
+    if app.cover == True and app.popup == True:
+        if app.height/2+30 <= mouseY <= app.height/2+70:
+            if app.width/2-260<=mouseX<=app.width/2-120:
+                app.popupButton1 = True
+                app.popupButton2 = app.popupButton3 = False
+            elif app.width/2-70<=mouseX<=app.width/2+70:
+                app.popupButton2 = True
+                app.popupButton1 = app.popupButton3 = False
+            elif app.width/2+120<=mouseX<=app.width/2+260:
+                app.popupButton3 = True
+                app.popupButton2 = app.popupButton1 = False
+
+        else:
+            app.popupButton1 = app.popupButton2 = app.popupButton3 = False
+
 def drawMoods(app):
-    drawLabel("What was your overall mood today?", app.width/2, app.height/2 + 50, align='center', size=20, bold=True)
+    drawLabel("What was your overall mood today?", app.width/2, app.height/2 + 50, align='center', size=20, bold=True, font='monospace')
     drawCircle(app.width/2-200, app.height/2 + 100, app.mood0w/2, fill='blue', opacity=60)
     drawCircle(app.width/2-100, app.height/2 + 100, app.mood1w/2, fill='lightBlue', opacity=60)
     drawCircle(app.width/2, app.height/2 + 100, app.mood2w/2, fill='yellow', opacity=60)
@@ -249,7 +283,7 @@ def drawMoods(app):
     drawImage(app.happy2, app.width/2 + 200, app.height/2 + 100, width=app.mood4w, height=app.mood4w, align='center')
 
     if app.mood != None and 0 <= app.mood <= 2:
-        drawLabel("I'm sorry your day hasn't been going well. Here are some suggestions to make it better!", app.width/2, app.height/2 + 100, align = 'center')
+        drawLabel("We're sorry your day hasn't been going well. We hope it improves!", app.width/2, app.height/2 + 150, align = 'center', font='monospace', size=15)
     
 def submitButton(app):
     drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = None, border='black')
@@ -257,12 +291,32 @@ def submitButton(app):
         drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = 'lightGreen', opacity=70)
     drawLabel("Save", (app.width/2+350), (app.height/2+200), align='center', font='monospace', size=18)
 
+def makePopUp(app):
+    if app.cover == True and app.popup == True:
+        drawRect(0, 0, app.width, app.height, fill ='gray', opacity = 85)
+        drawRect(app.width/2, app.height/2, 600, 400, fill='white', align='center')
+        drawLabel("Thank you for sharing!", app.width/2, app.height/2-110, font='monospace', size=25, bold=True)
+        drawLabel("We hope to see you again tommorrow.", app.width/2, app.height/2-80, font='monospace', size=25, bold=True)
+        drawRect((app.width/2), (app.height/2+50), 140, 40, align='center', fill = None, border='black')
+        drawRect((app.width/2+190), (app.height/2+50), 140, 40, align='center', fill = None, border='black')
+        drawRect((app.width/2-190), (app.height/2+50), 140, 40, align='center', fill = None, border='black')
+        drawLabel("Home", app.width/2-190, app.height/2+50, align='center', font='monospace', size=15)
+        drawLabel("Analytics", app.width/2, app.height/2+50, align='center', font='monospace', size=15)
+        drawLabel("Quests", app.width/2+190, app.height/2+50, align='center', font='monospace', size=15)
+        if app.popupButton1:
+            drawRect((app.width/2-190), (app.height/2+50), 140, 40, align='center', fill = 'lightGreen', opacity=70)
+        elif app.popupButton2:
+            drawRect((app.width/2), (app.height/2+50), 140, 40, align='center', fill = 'lightGreen', opacity=70)
+        elif app.popupButton3:
+            drawRect((app.width/2+190), (app.height/2+50), 140, 40, align='center', fill = 'lightGreen', opacity=70)
+        
+
 ######
 # CALENDAR VIEW
 ######
 
 def drawCalendar_redrawAll(app):
-    drawCalendar()        
+    drawCalendar(app)        
 
 def drawCalendar(app):
     #initializes relevant variables
@@ -292,11 +346,16 @@ def drawCalendar(app):
             left, top = app.width // 4 + boxWidth * col, app.height - boxHeight * (row + 1) - 100
             drawRect(left, top, boxWidth, boxHeight, fill = None, border = 'black')
                 
-    #draws all the day labels
+    #draws all the day labels and mood images
     for day in range(lastDay):
         left, top = app.width // 4 + currDayOfWeek * boxWidth, app.height - (currWeek + 1) * boxHeight - 100
         drawRect(left, top, boxWidth, boxHeight, fill=None, border='black')
         drawLabel(str(currDay), left + 8, top + 8, align = 'left-top', size = 18)
+        dailyEntry = app.calender.get((app.displayYear, app.displayMonth, currDay), None)
+        if dailyEntry != None:
+            dailyMood = dailyEntry.getMood()
+            dimension = 0.7 * min(boxWidth, boxHeight)
+            drawImage(dailyMood, (boxWidth // 2) + left, top + (boxHeight // 2), dimension, dimension, align = 'center')
         currDay -= 1
         currDayOfWeek = (currDayOfWeek - 1) % 7
         if currDayOfWeek == 6:
@@ -384,26 +443,29 @@ def selectDay(app, mX, mY):
 #         self.name = None
 #         self.calender = UserCalender()
 
-class UserCalender():
-    def __init__(self):
-        self.calender = {}
+# class UserCalender():
+#     def __init__(self):
+#         self.calender = {}
 
-    def addEntry(self, date, entry):
-        self.calender[date] = entry
+#     def addEntry(self, date, entry):
+#         self.calender[date] = entry
 
-    def getEntry(self, date):
-        return self.calender.get(date, None)
+#     def getEntry(self, date):
+#         return self.calender.get(date, None)
 
 class DailyEntry():
-    def __init__(self, user):
-        self.journalEntry = ''
-        self.mood = None
+    def __init__(self, journalEntry, mood):
+        self.journalEntry = journalEntry
+        self.mood = mood
 
     def setJournalEntry(self, journalEntry):
         self.jounalEntry = journalEntry
 
     def getJournalEntry(self):
         return self.journalEntry
+
+    def getMood(self):
+        return self.mood
 
 def main():
     runAppWithScreens(initialScreen='landingPage')
