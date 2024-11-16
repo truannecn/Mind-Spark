@@ -215,6 +215,7 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
     if app.popupButton2:
         setActiveScreen('drawCalendar')
     if app.popupButton3:
+        app.i = randrange(0,len(app.quests))
         setActiveScreen('quest')
     if app.popupButton1:
         setActiveScreen('landingPage')
@@ -453,6 +454,7 @@ def drawCalendar_onMousePress(app, mouseX, mouseY):
         setActiveScreen('landingPage')
         
     if (30 <= mouseX <= 170) and (90 <= mouseY <= 130):
+        app.i = randrange(0,len(app.quests))
         setActiveScreen('quest')
 
 def drawCalendar_onMouseMove(app, mouseX, mouseY):
@@ -519,8 +521,8 @@ def selectDay(app, mX, mY):
 def quest_redrawAll(app):
     drawImage('calendarBackground.png', 0, 0, width = app.width, height=app.height)
     drawLabel("Completing these self care tasks can greatly improve your mood and your overall well-being!", app.width/2, 50, font='monospace', size=25, align='center')
-    drawLabel("Check back daily for new tasks!", app.width/2, 80, font='monospace', size=20, align='center')
-    drawLabel(f"Daily Quest: {app.quests[app.i]}", app.width/2, app.height/2, font='monospace', size=30, align='center')
+    drawLabel("Check back for new tasks!", app.width/2, 80, font='monospace', size=20, align='center')
+    drawLabel(f"Current Quest: {app.quests[app.i]}", app.width/2, app.height/2, font='monospace', size=30, align='center')
     questButtons(app)
 
 def questButtons(app):
