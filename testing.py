@@ -23,6 +23,7 @@ def onAppStart(app):
     app.leftX, app.leftY = 433, 200
     app.rightX, app.rightY = 1079, 200
     app.bumperRadius = 50
+    app.selectedDay = None
 
     #user variables
     app.calender = UserCalender()
@@ -39,6 +40,8 @@ def onAppStart(app):
     app.textBoxTop = 150
     app.entryList = []
     app.showMoods = False
+    app.showSubmit = False
+    app.illumSubmit = False
 
     app.happy2 = 'smile.png'
     app.happy1 = 'smile (1).png'
@@ -88,10 +91,31 @@ def journalEntry_redrawAll(app):
     updateTextBox(app)
     if app.showMoods:
         drawMoods(app)
+    if app.showSubmit:
+        submitButton(app)
     
 def journalEntry_onMousePress(app, mouseX, mouseY):
     if 50<=mouseX<=app.width-50 and 50<=mouseY<=app.height/3:
             app.inBox = True
+
+    if app.showMoods:
+        if app.height/2 + 75 <= mouseY <= app.height/2 + 125:
+            if app.width/2-225<= mouseX <= app.width/2-175:
+                    app.showSubmit = True
+                    app.mood = 0
+            elif app.width/2-125 <= mouseX <= app.width/2-75 :
+                    app.mood = 1
+                    app.showSubmit = True
+            elif app.width/2-25 <= mouseX <= app.width/2 + 25:
+                    app.mood = 2
+                    app.showSubmit = True
+            elif app.width/2+75 <= mouseX <= app.width/2 + 125:
+                    app.mood = 3
+                    app.showSubmit = True
+            elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
+                    app.mood = 4
+                    app.showSubmit = True
+
             
             
 def journalEntry_onKeyPress(app, key):
@@ -125,19 +149,12 @@ def updateTextBox(app):
     currentLine = app.textBoxTop 
     for i in range(len(app.entryList)):
         currentLine = (app.textBoxTop+10) + (15*i)
-        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 20, font='monospace')
+        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15, font='monospace')
 
-    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=20, font='monospace')
+    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=15, font='monospace')
 
-
-#####
-# MOODS
-#####
-def moods_redrawAll(app):
-    drawMoods(app)
-
-def moods_onMouseMove(app, mouseX, mouseY):
-    if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
+def journalEntry_onMouseMove(app, mouseX, mouseY):
+    if app.height/2 + 75 <= mouseY <= app.height/2 + 125:
         if app.width/2-225<= mouseX <= app.width/2-175:
             app.mood0w = 60
         elif app.width/2-125 <= mouseX <= app.width/2-75 :
@@ -150,36 +167,32 @@ def moods_onMouseMove(app, mouseX, mouseY):
             app.mood4w = 60
     else:
         app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
-            
-
+    if app.showSubmit:
+        if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
+            app.illumSubmit = True
+        else:
+            app.illumSubmit = False
 def drawMoods(app):
-    drawLabel("How are you feeling today?", app.width/2, app.height/2, align='center', size=20, bold=True)
-    drawCircle(app.width/2-200, app.height/2 + 50, app.mood0w/2, fill='blue', opacity=60)
-    drawCircle(app.width/2-100, app.height/2 + 50, app.mood1w/2, fill='lightBlue', opacity=60)
-    drawCircle(app.width/2, app.height/2 + 50, app.mood2w/2, fill='yellow', opacity=60)
-    drawCircle(app.width/2+100, app.height/2 + 50, app.mood3w/2, fill='lightGreen', opacity=60)
-    drawCircle(app.width/2+200, app.height/2 + 50, app.mood4w/2, fill='green', opacity=60)
-    drawImage(app.sad2, app.width/2 - 200, app.height/2 + 50, width=app.mood0w, height=app.mood0w, align='center')
-    drawImage(app.sad1, app.width/2 - 100, app.height/2 + 50, width=app.mood1w, height=app.mood1w, align='center')
-    drawImage(app.middle, app.width/2, app.height/2 + 50, width=app.mood2w, height=app.mood2w, align='center')
-    drawImage(app.happy1, app.width/2 + 100, app.height/2 + 50, width=app.mood3w, height=app.mood3w, align='center')
-    drawImage(app.happy2, app.width/2 + 200, app.height/2 + 50, width=app.mood4w, height=app.mood4w, align='center')
+    drawLabel("What was your overall mood today?", app.width/2, app.height/2 + 50, align='center', size=20, bold=True)
+    drawCircle(app.width/2-200, app.height/2 + 100, app.mood0w/2, fill='blue', opacity=60)
+    drawCircle(app.width/2-100, app.height/2 + 100, app.mood1w/2, fill='lightBlue', opacity=60)
+    drawCircle(app.width/2, app.height/2 + 100, app.mood2w/2, fill='yellow', opacity=60)
+    drawCircle(app.width/2+100, app.height/2 + 100, app.mood3w/2, fill='lightGreen', opacity=60)
+    drawCircle(app.width/2+200, app.height/2 + 100, app.mood4w/2, fill='green', opacity=60)
+    drawImage(app.sad2, app.width/2 - 200, app.height/2 + 100, width=app.mood0w, height=app.mood0w, align='center')
+    drawImage(app.sad1, app.width/2 - 100, app.height/2 + 100, width=app.mood1w, height=app.mood1w, align='center')
+    drawImage(app.middle, app.width/2, app.height/2 + 100, width=app.mood2w, height=app.mood2w, align='center')
+    drawImage(app.happy1, app.width/2 + 100, app.height/2 + 100, width=app.mood3w, height=app.mood3w, align='center')
+    drawImage(app.happy2, app.width/2 + 200, app.height/2 + 100, width=app.mood4w, height=app.mood4w, align='center')
 
     if app.mood != None and 0 <= app.mood <= 2:
         drawLabel("I'm sorry your day hasn't been going well. Here are some suggestions to make it better!", app.width/2, app.height/2 + 100, align = 'center')
-
-def onMousePressMood(app, mouseX, mouseY):
-    if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
-        if app.width/2-225<= mouseX <= app.width/2-175:
-                app.mood = 0
-        elif app.width/2-125 <= mouseX <= app.width/2-75 :
-                app.mood = 1
-        elif app.width/2-25 <= mouseX <= app.width/2 + 25:
-                app.mood = 2
-        elif app.width/2+75 <= mouseX <= app.width/2 + 125:
-                app.mood = 3
-        elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
-                app.mood = 4
+    
+def submitButton(app):
+    drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = None, border='black')
+    if app.illumSubmit:
+        drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = 'lightGreen', opacity=70)
+    drawLabel("Save", (app.width/2+350), (app.height/2+200), align='center', font='monospace', size=18)
 
 ######
 # CALENDAR VIEW
@@ -188,7 +201,7 @@ def onMousePressMood(app, mouseX, mouseY):
 def drawCalendar_redrawAll(app):
     drawCalendar()        
 
-def drawCalender(app):
+def drawCalendar(app):
     #initializes relevant variables
     months = ['fill', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     boxWidth = app.width // 14
@@ -246,19 +259,58 @@ def distance(x1, y1, x2, y2):
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
 
 def onMousePressCalendar(app, mouseX, mouseY):
+    bumpMonth(app, mouseX, mouseY)
+    selectDay(app, mouseX, mouseY)
+
+def bumpMonth(app, mouseX, mouseY):
     app.displayMonth -= 1
     if distance(mouseX, mouseY, app.leftX, app.leftY) < 50:
         app.displayMonth -= 1
         if app.displayMonth != app.displayMonth % 12:
             app.displayMonth = app.displayMonth % 12
             app.displayYear -= 1
+        app.selectedDay = None
     if distance(mouseX, mouseY, app.rightX, app.rightY) < 50:
         app.displayMonth += 1
         if app.displayMonth != app.displayMonth % 12:
             app.displayMonth = app.displayMonth % 12
             app.displayYear += 1
+        app.selectedDay = None
     app.displayMonth += 1
 
+def selectDay(app, mX, mY):
+    #initializes relevant variables
+    months = ['fill', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    boxWidth = app.width // 14
+    daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    _, lastDay = calendar.monthrange(app.displayYear, app.displayMonth)
+    lastDayOfMonth = calendar.weekday(app.displayYear, app.displayMonth, lastDay)
+    currWeek = 0
+    currDay = lastDay
+    currDayOfWeek = lastDayOfMonth
+    
+    #adjusts size of vertical boxes
+    if app.displayMonth == 2 and app.displayYear % 4 != 0 and lastDayOfMonth == 6:
+        rows = 4
+        boxHeight = (5 / rows) * boxWidth
+    elif lastDayOfMonth + 29 < lastDay:
+        rows = 6
+        boxHeight = (5 / rows) * boxWidth
+    else:
+        rows = 5
+        boxHeight = boxWidth
+
+    lRow = rows - 1
+    lCol = 6
+    left = app.width // 4
+    bottom = app.height - 100
+
+    if (left <= mX <= left + (boxWidth * 7)) and (bottom - (boxHeight * rows) <= mY <= bottom):
+        nRow = rows - ((bottom - mY) // boxHeight) - 1
+        nCol = (mX - L) // boxWidth
+        dRow = nRow - lRow
+        dCol = nCol - lCol
+        app.selectedDay = lastDay + 7 * dRow + 7 * dCol
 
 
 
