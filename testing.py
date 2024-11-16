@@ -23,6 +23,7 @@ def onAppStart(app):
     app.leftX, app.leftY = 433, 200
     app.rightX, app.rightY = 1079, 200
     app.bumperRadius = 50
+    app.selectedDay = None
 
     #user variables
     app.calender = UserCalender()
@@ -138,16 +139,16 @@ def journalEntry_onKeyPress(app, key):
 def makeTextBox(app):
     drawLabel(date.today(), app.textBoxLeft, app.textBoxTop-22, size=38, align='left', font='monospace', bold=True)
     drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill=None)
-    if len(app.entry) == 0 and len(app.entryList) == 0:
-        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 15, align='left', fill = 'gray', italic = True, size=20, font='monospace')
+    if len(app.entry) == 0:
+        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 10, align='left', fill = 'gray', italic = True, size=17)
 
 def updateTextBox(app):
     currentLine = app.textBoxTop 
     for i in range(len(app.entryList)):
         currentLine = (app.textBoxTop+10) + (15*i)
-        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 20, font='monospace')
+        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15, font='monospace')
 
-    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=20, font='monospace')
+    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=15, font='monospace')
 
 def journalEntry_onMouseMove(app, mouseX, mouseY):
     if app.height/2 + 75 <= mouseY <= app.height/2 + 125:
@@ -197,7 +198,7 @@ def submitButton(app):
 def drawCalendar_redrawAll(app):
     drawCalendar()        
 
-def drawCalender(app):
+def drawCalendar(app):
     #initializes relevant variables
     months = ['fill', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     boxWidth = app.width // 14
@@ -255,19 +256,58 @@ def distance(x1, y1, x2, y2):
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
 
 def onMousePressCalendar(app, mouseX, mouseY):
+    bumpMonth(app, mouseX, mouseY)
+    selectDay(app, mouseX, mouseY)
+
+def bumpMonth(app, mouseX, mouseY):
     app.displayMonth -= 1
     if distance(mouseX, mouseY, app.leftX, app.leftY) < 50:
         app.displayMonth -= 1
         if app.displayMonth != app.displayMonth % 12:
             app.displayMonth = app.displayMonth % 12
             app.displayYear -= 1
+        app.selectedDay = None
     if distance(mouseX, mouseY, app.rightX, app.rightY) < 50:
         app.displayMonth += 1
         if app.displayMonth != app.displayMonth % 12:
             app.displayMonth = app.displayMonth % 12
             app.displayYear += 1
+        app.selectedDay = None
     app.displayMonth += 1
 
+def selectDay(app, mX, mY):
+    #initializes relevant variables
+    months = ['fill', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    boxWidth = app.width // 14
+    daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    _, lastDay = calendar.monthrange(app.displayYear, app.displayMonth)
+    lastDayOfMonth = calendar.weekday(app.displayYear, app.displayMonth, lastDay)
+    currWeek = 0
+    currDay = lastDay
+    currDayOfWeek = lastDayOfMonth
+    
+    #adjusts size of vertical boxes
+    if app.displayMonth == 2 and app.displayYear % 4 != 0 and lastDayOfMonth == 6:
+        rows = 4
+        boxHeight = (5 / rows) * boxWidth
+    elif lastDayOfMonth + 29 < lastDay:
+        rows = 6
+        boxHeight = (5 / rows) * boxWidth
+    else:
+        rows = 5
+        boxHeight = boxWidth
+
+    lRow = rows - 1
+    lCol = 6
+    left = app.width // 4
+    bottom = app.height - 100
+
+    if (left <= mX <= left + (boxWidth * 7)) and (bottom - (boxHeight * rows) <= mY <= bottom):
+        nRow = rows - ((bottom - mY) // boxHeight) - 1
+        nCol = (mX - L) // boxWidth
+        dRow = nRow - lRow
+        dCol = nCol - lCol
+        app.selectedDay = lastDay + 7 * dRow + 7 * dCol
 
 
 
