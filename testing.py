@@ -166,7 +166,8 @@ def journalEntry_redrawAll(app):
         drawMoods(app)
     if app.showSubmit:
         submitButton(app)
-    makePopUp(app)
+    if app.popup == True and app.cover==True:
+        makePopUp(app)
     
 def journalEntry_onMousePress(app, mouseX, mouseY):
     #app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3
@@ -206,6 +207,10 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
             for segment in app.entryList:
                 app.cohesiveEntry += segment
             app.calender[app.currYear, app.currMonth, app.currDay] = DailyEntry(app.cohesiveEntry, app.mood)
+        
+        elif (mouseX < app.width/2+262.5 or mouseX > app.width/2+437.5):
+            app.popup = False
+            app.cover = False
 
     if app.popupButton2:
         setActiveScreen('drawCalendar')
@@ -346,6 +351,7 @@ def makePopUp(app):
             drawRect((app.width/2), (app.height/2+50), 140, 40, align='center', fill = 'lightGreen', opacity=70)
         elif app.popupButton3:
             drawRect((app.width/2+190), (app.height/2+50), 140, 40, align='center', fill = 'lightGreen', opacity=70)
+
         
 
 ######
