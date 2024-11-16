@@ -19,8 +19,8 @@ def onAppStart(app):
     app.currYear = 2024
     app.displayMonth = app.currMonth
     app.displayYear = app.currYear
-    app.leftX, app.leftY = 40, 50
-    app.rightX, app.rightY = 360, 50
+    app.leftX, app.leftY = 433, 200
+    app.rightX, app.rightY = 1079, 200
     app.bumperRadius = 50
 
     #user variables
@@ -117,16 +117,13 @@ def redrawAll(app):
         updateTextBox(app)
     elif app.page == 'mood':
         drawMoods(app)
-    elif app.page == 'calender view':
-<<<<<<< Updated upstream
+    elif app.page == 'calendar view':
         drawCalender(app)
-=======
-        drawCalender(app, app.calender)
-
->>>>>>> Stashed changes
         
 def drawLandingPage(app):
     drawImage('converted_image.png', 0, 0)
+    imageWidth, imageHeight = getImageSize('mindSpark.png')
+    drawImage('mindSpark.png', app.width/2, app.height/2-100, width = imageWidth/2, height = imageHeight/2)
     
 
 def makeTextBox(app):
@@ -175,8 +172,9 @@ def onMouseMove(app, mouseX, mouseY):
             app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
 
 def drawCalender(app):
+    #initializes relevant variables
     months = ['fill', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    boxWidth = app.width // 7
+    boxWidth = app.width // 14
     daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     _, lastDay = calendar.monthrange(app.displayYear, app.displayMonth)
     lastDayOfMonth = calendar.weekday(app.displayYear, app.displayMonth, lastDay)
@@ -184,40 +182,48 @@ def drawCalender(app):
     currDay = lastDay
     currDayOfWeek = lastDayOfMonth
     
+    #adjusts size of vertical boxes
     if app.displayMonth == 2 and app.displayYear % 4 != 0 and lastDayOfMonth == 6:
         rows = 4
-        boxHeight = (5 / 4) * boxWidth
+        boxHeight = (5 / rows) * boxWidth
     elif lastDayOfMonth + 29 < lastDay:
         rows = 6
-        boxHeight = (5 / 6) * boxWidth
+        boxHeight = (5 / rows) * boxWidth
     else:
         rows = 5
         boxHeight = boxWidth
-        
+
+    #draws all the boxes  
     for row in range(rows):
         for col in range(7):
-            left, top = 0 + boxWidth * col, 400 - boxHeight * (row + 1)
+            left, top = app.width // 4 + boxWidth * col, app.height - boxHeight * (row + 1) - 100
             drawRect(left, top, boxWidth, boxHeight, fill = None, border = 'black')
                 
-
+    #draws all the day labels
     for day in range(lastDay):
-        left, top = 0 + currDayOfWeek * boxWidth, 400 - (currWeek + 1) * boxHeight
+        left, top = app.width // 4 + currDayOfWeek * boxWidth, app.height - (currWeek + 1) * boxHeight - 100
         drawRect(left, top, boxWidth, boxHeight, fill=None, border='black')
-        drawLabel(str(currDay), left + 5, top + 5, align = 'left-top', size = 10)
+        drawLabel(str(currDay), left + 8, top + 8, align = 'left-top', size = 18)
         currDay -= 1
         currDayOfWeek = (currDayOfWeek - 1) % 7
         if currDayOfWeek == 6:
             currWeek += 1
-            
+
+    #draws days of the week        
     for i in range(len(daysOfWeek)):
         day = daysOfWeek[i]
-        drawLabel(day, boxWidth * i + 0.5 * boxWidth, 400 - boxHeight * (row + 1.25), size = 10)
-        
-    drawLabel(months[app.displayMonth] + " " + str(app.displayYear), app.width // 2, 50, size = 35)        
-    drawRect(0, 400 - boxHeight * (row + 1), app.width, boxHeight * (row + 1), fill = None, border = 'black', borderWidth = 2)
+        drawLabel(day, app.width // 4 + boxWidth * i + 0.5 * boxWidth, app.height - boxHeight * (row + 1.25) - 100, size = 20)
+
+    #draws month and outside border
+    left, top = app.width // 4, app.height - boxHeight * (row + 1) - 100
+    drawLabel(months[app.displayMonth] + " " + str(app.displayYear), app.width // 2, 200, size = 70)        
+    drawRect(left, top, app.width // 2, boxHeight * (row + 1), fill = None, border = 'black', borderWidth = 4)
     
-    drawCircle(40, 50, 20, opacity = 50)
-    drawCircle(360, 50, 20, opacity = 50)
+    #draws bumpers
+    drawCircle(app.leftX, app.leftY, app.bumperRadius, opacity = 50)
+    drawLabel('<', app.leftX, app.leftY, size = 50)
+    drawCircle(app.rightX, app.rightY, app.bumperRadius, opacity = 50)
+    drawLabel('>', app.rightX, app.rightY, size = 50)
     
 def distance(x1, y1, x2, y2):
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
