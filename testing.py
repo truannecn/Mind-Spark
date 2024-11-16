@@ -1,13 +1,13 @@
 from cmu_graphics import *
 import string
 import calendar
+from datetime import date
 
 ######
 # ON APP START
 ######
 def onAppStart(app):
-    app.page = 'mood'
-    app.users = []
+    # app.users = []
 
     # #login page app variables
     # app.username = ''
@@ -35,8 +35,9 @@ def onAppStart(app):
     app.inBox = False
     app.entry = ''
     app.textBoxLeft = 50
-    app.textBoxTop = 50
-    app.entryList = ["aldkfjadslkfjasklfjlaskjf"]
+    app.textBoxTop = 150
+    app.entryList = []
+    app.showMoods = False
 
     app.happy2 = 'smile.png'
     app.happy1 = 'smile (1).png'
@@ -51,94 +52,102 @@ def onAppStart(app):
     app.sad2 = 'crying.png'
 
     app.wallpaper = 'converted_image.png'
-
-
+    
+    #landing variables
+    app.buttonRect = False
 
 ######
-# ON KEY PRESS
+# LANDING PAGE
 ######
-def onKeyPress(app, key):
+def landingPage_redrawAll(app):
+    drawImage('converted_image.png', 0, 0)
+    imageWidth, imageHeight = getImageSize('mindSpark.png')
+    drawImage('mindSpark.png', app.width/2 - 375 , app.height/2+100, width = imageWidth/2, height = imageHeight/2, align='center')
+    drawLabel("Welcome! We are glad you are here. How do you feel today?", app.width/2 + 350, app.height/2 + 100, font='monospace', size=21, italic=True)
+    drawRect((app.width/2+350), (app.height/2+175), 225, 50, align='center', fill = None, border='black')
+    if app.buttonRect:
+        drawRect((app.width/2+350), (app.height/2+175), 225, 50, align='center', fill = 'lightGreen', opacity=70)
+    drawLabel("Begin Journaling", (app.width/2+350), (app.height/2+175), align='center', font='monospace', size=18)
+    
+def landingPage_onMousePress(app, mouseX, mouseY):
+    if (app.width/2+237.5 <= mouseX <= app.width/2+462.5) and (app.height/2+150<= mouseY <= app.height/2+200):
+        setActiveScreen('journalEntry')
+def landingPage_onMouseMove(app, mouseX, mouseY):
+    if (app.width/2+237.5 <= mouseX <= app.width/2+462.5) and (app.height/2+150<= mouseY <= app.height/2+200):
+        app.buttonRect = True
+    else:
+        app.buttonRect = False
+
+######
+# JOURNAL ENTRY
+######
+def journalEntry_redrawAll(app):
+    makeTextBox(app)
+    updateTextBox(app)
+    if app.showMoods:
+        drawMoods(app)
+    
+def journalEntry_onMousePress(app, mouseX, mouseY):
+    if 50<=mouseX<=app.width-50 and 50<=mouseY<=app.height/3:
+            app.inBox = True
+            
+            
+def journalEntry_onKeyPress(app, key):
     if app.inBox:
+        app.showMoods = True
+        if len(app.entry) >= 115:
+            app.entryList.append(app.entry)
+            app.entry = ''
         if key == 'space':
             app.entry += " "
         elif key == 'backspace':
-            app.entry = app.entry[:-1]
-        elif key.isalpha() or key.isdigit() or key in string.punctuation:
+            if len(app.entryList) != 0 or len(app.entry) != 0:
+                if len(app.entry) > 0:
+                    app.entry = app.entry[:-1]
+                elif len(app.entry) == 0:
+                    app.entry = app.entryList[0]
+                    app.entryList.pop()
+                    app.entry = app.entry[:-1]
+            
+        elif key in string.ascii_letters or key in string.digits or key in string.punctuation:
             app.entry += key
-        else:
-            app.entry = app.entry
-
-#####
-# ON MOUSE PRESS
-#####
-def onMousePress(app, mouseX, mouseY):
-    if app.page == 'journal entry':
-        if 50<=mouseX<=app.width-50 and 50<=mouseY<=app.height/3:
-            app.inBox = True
-    elif app.page == 'mood':
-        onMousePressMood(app, mouseX, mouseY)
-    elif app.page == 'calendar view':
-        onMousePressCalendar(app, mouseX, mouseY)
-
-def onMousePressMood(app, mouseX, mouseY):
-    if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
-        if app.width/2-225<= mouseX <= app.width/2-175:
-                app.mood = 0
-        elif app.width/2-125 <= mouseX <= app.width/2-75 :
-                app.mood = 1
-        elif app.width/2-25 <= mouseX <= app.width/2 + 25:
-                app.mood = 2
-        elif app.width/2+75 <= mouseX <= app.width/2 + 125:
-                app.mood = 3
-        elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
-                app.mood = 4
-
-def onMousePressCalendar(app, mouseX, mouseY):
-    app.displayMonth -= 1
-    if distance(mouseX, mouseY, app.leftX, app.leftY) < 50:
-        app.displayMonth -= 1
-        if app.displayMonth != app.displayMonth % 12:
-            app.displayMonth = app.displayMonth % 12
-            app.displayYear -= 1
-    if distance(mouseX, mouseY, app.rightX, app.rightY) < 50:
-        app.displayMonth += 1
-        if app.displayMonth != app.displayMonth % 12:
-            app.displayMonth = app.displayMonth % 12
-            app.displayYear += 1
-    app.displayMonth += 1
-
-#####
-# REDRAW ALL
-#####
-def redrawAll(app):
-    if app.page == "landing page":
-        drawLandingPage(app)
-    if app.page == 'journal entry':
-        makeTextBox(app)
-        updateTextBox(app)
-    elif app.page == 'mood':
-        drawMoods(app)
-    elif app.page == 'calendar view':
-        drawCalender(app)
-        
-def drawLandingPage(app):
-    drawImage('converted_image.png', 0, 0)
-    imageWidth, imageHeight = getImageSize('mindSpark.png')
-    drawImage('mindSpark.png', app.width/2, app.height/2-100, width = imageWidth/2, height = imageHeight/2)
-    
-
+            
 def makeTextBox(app):
+    drawLabel(date.today(), app.textBoxLeft, app.textBoxTop-22, size=38, align='left', font='monospace', bold=True)
     drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill=None)
     if len(app.entry) == 0:
-        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 10, align='left', fill = 'gray', italic = True)
+        drawLabel("How are you feeling today?", app.textBoxLeft+7, app.textBoxTop + 10, align='left', fill = 'gray', italic = True, size=17)
 
 def updateTextBox(app):
     currentLine = app.textBoxTop 
     for i in range(len(app.entryList)):
         currentLine = (app.textBoxTop+10) + (15*i)
-        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15)
+        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15, font='monospace')
 
-    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=15)
+    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=15, font='monospace')
+
+
+#####
+# MOODS
+#####
+def moods_redrawAll(app):
+    drawMoods(app)
+
+def moods_onMouseMove(app, mouseX, mouseY):
+    if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
+        if app.width/2-225<= mouseX <= app.width/2-175:
+            app.mood0w = 60
+        elif app.width/2-125 <= mouseX <= app.width/2-75 :
+            app.mood1w = 60
+        elif app.width/2-25 <= mouseX <= app.width/2 + 25:
+            app.mood2w = 60
+        elif app.width/2+75 <= mouseX <= app.width/2 + 125:
+            app.mood3w = 60
+        elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
+            app.mood4w = 60
+    else:
+        app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
+            
 
 def drawMoods(app):
     drawLabel("How are you feeling today?", app.width/2, app.height/2, align='center', size=20, bold=True)
@@ -156,21 +165,25 @@ def drawMoods(app):
     if app.mood != None and 0 <= app.mood <= 2:
         drawLabel("I'm sorry your day hasn't been going well. Here are some suggestions to make it better!", app.width/2, app.height/2 + 100, align = 'center')
 
-def onMouseMove(app, mouseX, mouseY):
-    if app.page == 'mood':
-        if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
-            if app.width/2-225<= mouseX <= app.width/2-175:
-                app.mood0w = 60
-            elif app.width/2-125 <= mouseX <= app.width/2-75 :
-                app.mood1w = 60
-            elif app.width/2-25 <= mouseX <= app.width/2 + 25:
-                app.mood2w = 60
-            elif app.width/2+75 <= mouseX <= app.width/2 + 125:
-                app.mood3w = 60
-            elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
-                app.mood4w = 60
-        else:
-            app.mood0w = app.mood1w = app.mood2w = app.mood3w = app.mood4w = 50
+def onMousePressMood(app, mouseX, mouseY):
+    if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
+        if app.width/2-225<= mouseX <= app.width/2-175:
+                app.mood = 0
+        elif app.width/2-125 <= mouseX <= app.width/2-75 :
+                app.mood = 1
+        elif app.width/2-25 <= mouseX <= app.width/2 + 25:
+                app.mood = 2
+        elif app.width/2+75 <= mouseX <= app.width/2 + 125:
+                app.mood = 3
+        elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
+                app.mood = 4
+
+######
+# CALENDAR VIEW
+######
+
+def drawCalendar_redrawAll(app):
+    drawCalendar()        
 
 def drawCalender(app):
     #initializes relevant variables
@@ -229,6 +242,23 @@ def drawCalender(app):
 def distance(x1, y1, x2, y2):
     return ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5
 
+def onMousePressCalendar(app, mouseX, mouseY):
+    app.displayMonth -= 1
+    if distance(mouseX, mouseY, app.leftX, app.leftY) < 50:
+        app.displayMonth -= 1
+        if app.displayMonth != app.displayMonth % 12:
+            app.displayMonth = app.displayMonth % 12
+            app.displayYear -= 1
+    if distance(mouseX, mouseY, app.rightX, app.rightY) < 50:
+        app.displayMonth += 1
+        if app.displayMonth != app.displayMonth % 12:
+            app.displayMonth = app.displayMonth % 12
+            app.displayYear += 1
+    app.displayMonth += 1
+
+
+
+
 # class Account():
 #     def __init__(self, username, password):
 #         self.username = username
@@ -258,6 +288,6 @@ class DailyEntry():
         return self.journalEntry
 
 def main():
-    runApp()
+    runAppWithScreens(initialScreen='landingPage')
 
 main()
