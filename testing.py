@@ -149,9 +149,9 @@ def updateTextBox(app):
     currentLine = app.textBoxTop 
     for i in range(len(app.entryList)):
         currentLine = (app.textBoxTop+10) + (15*i)
-        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 15, font='monospace')
+        drawLabel(app.entryList[i], 57, currentLine, align='left', fill='black', size = 20, font='monospace')
 
-    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=15, font='monospace')
+    drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black',size=20, font='monospace')
 
 def journalEntry_onMouseMove(app, mouseX, mouseY):
     if app.height/2 + 75 <= mouseY <= app.height/2 + 125:
