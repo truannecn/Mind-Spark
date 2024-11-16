@@ -11,3 +11,7 @@ Please run **"mindSpark.py"** to run the program and view the application! :)
 Possible modules to install (if not installed already(?)):
 - Python
 - CMU Graphics
+
+ATTRIBUTIONS:
+- All background images generated using ChatGPT
+- All face icons made by "lalawidi" from flaticon.com
