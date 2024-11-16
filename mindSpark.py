@@ -4,6 +4,7 @@ import calendar
 from datetime import datetime
 from datetime import date
 from datetime import datetime
+from classes import DailyEntry
 
 import random
 
@@ -18,12 +19,6 @@ def randomMood():
 # ON APP START
 ######
 def onAppStart(app):
-    # app.users = []
-
-    # #login page app variables
-    # app.username = ''
-    # app.password = ''
-    # app.currentUser = None
 
     #calendar page variables
     app.currYear = int(str(date.today())[0:4])
@@ -589,37 +584,19 @@ def quest_onMousePress(app, mouseX, mouseY):
     elif 140 <= mouseY <= 180 and 25<= mouseX <= 165:
         setActiveScreen('drawCalendar')
 
+# class DailyEntry():
+#     def __init__(self, journalEntry, mood):
+#         self.journalEntry = journalEntry
+#         self.mood = mood
 
-# class Account():
-#     def __init__(self, username, password):
-#         self.username = username
-#         self.password = password
-#         self.name = None
-#         self.calender = UserCalender()
+#     def setJournalEntry(self, journalEntry):
+#         self.jounalEntry = journalEntry
 
-# class UserCalender():
-#     def __init__(self):
-#         self.calender = {}
+#     def getJournalEntry(self):
+#         return self.journalEntry
 
-#     def addEntry(self, date, entry):
-#         self.calender[date] = entry
-
-#     def getEntry(self, date):
-#         return self.calender.get(date, None)
-
-class DailyEntry():
-    def __init__(self, journalEntry, mood):
-        self.journalEntry = journalEntry
-        self.mood = mood
-
-    def setJournalEntry(self, journalEntry):
-        self.jounalEntry = journalEntry
-
-    def getJournalEntry(self):
-        return self.journalEntry
-
-    def getMood(self):
-        return self.mood
+#     def getMood(self):
+#         return self.mood
 
 def main():
     runAppWithScreens(initialScreen='landingPage')
