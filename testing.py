@@ -1,8 +1,8 @@
 from cmu_graphics import *
 import string
 import calendar
-from datetime import date
 import datetime
+from datetime import date
 import random
 
 ######
@@ -17,9 +17,9 @@ def onAppStart(app):
     # app.currentUser = None
 
     #calendar page variables
-    app.currMonth = 11
-    app.currentDay = 16
-    app.currYear = 2024
+    app.currYear = int(datetime.datetime.now()[0:4])
+    app.currMonth = int(datetime.datetime.now()[5:7])
+    app.currentDay = int(datetime.datetime.now()[9:11])
     app.displayMonth = app.currMonth
     app.displayYear = app.currYear
     app.leftX, app.leftY = 433, 200
@@ -63,6 +63,7 @@ def onAppStart(app):
     app.textBoxLeft = 50
     app.textBoxTop = 150
     app.entryList = []
+    app.cohesiveEntry = ''
     app.showMoods = False
     app.showSubmit = False
     app.illumSubmit = False
@@ -189,7 +190,9 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
             app.cover = True
             app.popup = True
             x = datetime.datetime.now()
-            #app.calender[(int(x[0:4]), int(x[5:7]), int(x[9:11]))] = DailyEntry('')
+            for segment in app.entryList:
+                app.cohesiveEntry += segment
+            app.calender[app.currYear, app.currMonth, app.currDay] = DailyEntry(app.cohesiveEntry, 'MOOD PLACEHOLDER')
 
     if app.popupButton2:
         setActiveScreen('drawCalendar')
@@ -297,6 +300,7 @@ def submitButton(app):
     if app.illumSubmit:
         drawRect((app.width/2+350), (app.height/2+200), 175, 50, align='center', fill = 'lightGreen', opacity=70)
     drawLabel("Save", (app.width/2+350), (app.height/2+200), align='center', font='monospace', size=18)
+    
 
 def makePopUp(app):
     if app.cover == True and app.popup == True:
