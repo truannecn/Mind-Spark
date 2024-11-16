@@ -6,7 +6,7 @@ import calendar
 # ON APP START
 ######
 def onAppStart(app):
-    app.page = 'mood'
+    app.page = 'landing page'
     app.users = []
 
     #login page app variables
@@ -48,6 +48,8 @@ def onAppStart(app):
     app.middle = 'sceptic.png'
     app.sad1 = 'sceptic (1).png'
     app.sad2 = 'crying.png'
+
+    app.wallpaper = 'converted_image.png'
 
 
 
@@ -116,10 +118,15 @@ def redrawAll(app):
     elif app.page == 'mood':
         drawMoods(app)
     elif app.page == 'calender view':
+<<<<<<< Updated upstream
         drawCalender(app)
+=======
+        drawCalender(app, app.calender)
+
+>>>>>>> Stashed changes
         
 def drawLandingPage(app):
-    pass
+    drawImage('converted_image.png', 0, 0)
     
 
 def makeTextBox(app):
