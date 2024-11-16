@@ -6,7 +6,7 @@ import calendar
 # ON APP START
 ######
 def onAppStart(app):
-    app.page = 'journal entry'
+    app.page = 'mood'
     app.users = []
 
     #login page app variables
@@ -18,8 +18,7 @@ def onAppStart(app):
     app.calender = UserCalender()
 
     #mood app variables
-    app.faceR = 10
-    app.moodFaces = []
+    app.mood = None
 
     #textBox app variables
     app.inBox = False
@@ -29,6 +28,13 @@ def onAppStart(app):
     app.entryList = []
     
     app.hold = False
+
+    #mood images
+    app.happy2 = 'smile.png'
+    app.happy1 = 'smile (1).png'
+    app.middle = 'sceptic.png'
+    app.sad1 = 'sceptic (1).png'
+    app.sad2 = 'crying.png'
 
 
 
@@ -59,8 +65,23 @@ def onKeyPress(app, key):
 # ON MOUSE PRESS
 #####
 def onMousePress(app, mouseX, mouseY):
-    if 50<=mouseX<=app.width-50 and 50<=mouseY<=app.height/3:
-        app.inBox = True
+    if app.page == 'journal entry':
+        if 50<=mouseX<=app.width-50 and 50<=mouseY<=app.height/3:
+            app.inBox = True
+    elif app.page == 'mood':
+        if app.height/2 + 25 <= mouseY <= app.height/2 + 75:
+            if app.width/2-225<= mouseX <= app.width/2-175:
+                app.mood = 0
+            elif app.width/2-125 <= mouseX <= app.width/2-75 :
+                app.mood = 1
+            elif app.width/2-25 <= mouseX <= app.width/2 + 25:
+                app.mood = 2
+            elif app.width/2+75 <= mouseX <= app.width/2 + 125:
+                app.mood = 3
+            elif app.width/2 + 175 <= mouseX <= app.width/2 + 225: 
+                app.mood = 4
+    # elif app.page == 'calendar view':
+
 
 #####
 # REDRAW ALL
@@ -69,6 +90,8 @@ def redrawAll(app):
     if app.page == 'journal entry':
         makeTextBox(app)
         updateTextBox(app)
+        drawMoods(app)
+
     elif app.page == 'mood':
         drawMoods(app)
     elif app.page == 'calender view':
@@ -88,7 +111,21 @@ def updateTextBox(app):
     drawLabel(app.entry, 57, currentLine + 15, align='left', fill='black', size = 20, font = 'monospace')
 
 def drawMoods(app):
-    moods
+    drawLabel("How are you feeling today?", app.width/2, app.height/2, align='center', size=20, bold=True)
+    drawCircle(app.width/2-200, app.height/2 + 50, 25, fill='blue', opacity=60)
+    drawCircle(app.width/2-100, app.height/2 + 50, 25, fill='lightBlue', opacity=60)
+    drawCircle(app.width/2, app.height/2 + 50, 25, fill='yellow', opacity=60)
+    drawCircle(app.width/2+100, app.height/2 + 50, 25, fill='lightGreen', opacity=60)
+    drawCircle(app.width/2+200, app.height/2 + 50, 25, fill='green', opacity=60)
+    drawImage(app.sad2, app.width/2 - 200, app.height/2 + 50, width=50, height=50, align='center')
+    drawImage(app.sad1, app.width/2 - 100, app.height/2 + 50, width=50, height=50, align='center')
+    drawImage(app.middle, app.width/2, app.height/2 + 50, width=50, height=50, align='center')
+    drawImage(app.happy1, app.width/2 + 100, app.height/2 + 50, width=50, height=50, align='center')
+    drawImage(app.happy2, app.width/2 + 200, app.height/2 + 50, width=50, height=50, align='center')
+
+    if app.mood != None and 0 <= app.mood <= 2:
+        drawLabel("I'm sorry your day hasn't been going well. Here are some suggestions to make it better!", app.width/2, app.height/2 + 100, align = 'center')
+
 
 def drawCalender(app):
     months = {'January': 31, 'February': (28, 29), 'March': 31, 'April': 30, 'May': 31, 'June': 30, 'July': 31, 'August': 31, 'September': 30, 'October': 31, 'November': 30, 'December': 31}
