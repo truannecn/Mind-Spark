@@ -1,6 +1,7 @@
 from cmu_graphics import *
 import string
 import calendar
+from datetime import datetime
 from datetime import date
 from datetime import datetime
 import random
@@ -17,9 +18,9 @@ def onAppStart(app):
     # app.currentUser = None
 
     #calendar page variables
-    app.currYear = int(str(date.today()[0:4]))
+    app.currYear = int(str(date.today())[0:4])
     app.currMonth = int(str(date.today())[5:7])
-    app.currentDay = int(str(date.today())[9:11])
+    app.currDay = int(str(date.today())[9:11])
     app.displayMonth = app.currMonth
     app.displayYear = app.currYear
     app.leftX, app.leftY = 433, 200
@@ -188,7 +189,6 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
         if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
             app.cover = True
             app.popup = True
-            x = date.now()
             for segment in app.entryList:
                 app.cohesiveEntry += segment
             app.calender[app.currYear, app.currMonth, app.currDay] = DailyEntry(app.cohesiveEntry, 'MOOD PLACEHOLDER')
