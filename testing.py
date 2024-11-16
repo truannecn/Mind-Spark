@@ -6,7 +6,7 @@ import calendar
 # ON APP START
 ######
 def onAppStart(app):
-    app.page = 'journal entry'
+    app.page = 'landing page'
     app.users = []
 
     #login page app variables
@@ -66,6 +66,8 @@ def onMousePress(app, mouseX, mouseY):
 # REDRAW ALL
 #####
 def redrawAll(app):
+    if app.page == "landing page":
+        drawLandingPage(app)
     if app.page == 'journal entry':
         makeTextBox(app)
         updateTextBox(app)
@@ -73,6 +75,10 @@ def redrawAll(app):
         drawMoods(app)
     elif app.page == 'calender view':
         drawCalender(app, app.calender)
+        
+def drawLandingPage(app):
+    pass
+    
 
 def makeTextBox(app):
     drawRect(app.textBoxLeft, app.textBoxTop, app.width-100, app.height/3, border='black', fill=None)
