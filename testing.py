@@ -88,6 +88,8 @@ def onAppStart(app):
     #quest variables
     app.quests = ['Take a 10 minute walk outside', 'Meditate for 5 minutes', 'Listen to your favorite song!', 'Give someone a hug', 'Drink water!', 'Practice daily affirmations', 'Complete a 10 minute yoga session', 'Treat yourself to your favorite food', 'Tell someone you love them', 'Take a relaxing bath']
     app.i = randrange(0,len(app.quests))
+    app.questHomeIllum = False
+    app.questAnaIllum = False
 
 ######
 # LANDING PAGE
@@ -510,10 +512,36 @@ def quest_redrawAll(app):
     drawLabel("Completing these self care tasks can greatly improve your mood and your overall well-being!", app.width/2, 50, font='monospace', size=25, align='center')
     drawLabel("Check back daily for new tasks!", app.width/2, 80, font='monospace', size=20, align='center')
     drawLabel(f"Daily Quest: {app.quests[app.i]}", app.width/2, app.height/2, font='monospace', size=30, align='center')
+    questButtons(app)
 
+def questButtons(app):
+    drawRect(25, 100, 140, 40, align='left', fill = None, border='black')
+    drawLabel('Home', 95, 100, align='center', font='monospace', size=20)
+    drawRect(25, 160, 140, 40, align='left', fill = None, border='black')
+    drawLabel('Analytics', 95, 160, align='center', font='monospace', size=20)
+    if app.questHomeIllum:
+        drawRect(25, 100, 140, 40, align='left', fill = 'lightGreen', opacity=70)
+    if app.questAnaIllum:
+        drawRect(25, 160, 140, 40, align='left', fill = 'lightGreen', opacity=70)
 
+def quest_onMouseMove(app, mouseX, mouseY):
+    if 25<= mouseX <= 165:
+        if 100 <= mouseY <= 140:
+            app.questHomeIllum = True
+            app.questAnaIllum = False
+        elif 120 <= mouseY <= 200:
+            app.questAnaIllum = True
+            app.questHomeIllum = False
+    else:
+        app.questHomeIllum = False
+        app.questAnaIllum = False
 
-
+def quest_onMousePress(app, mouseX, mouseY):
+    if 25<= mouseX <= 165:
+        if 100 <= mouseY <= 140:
+            setActiveScreen('landingPage')
+        elif 120 <= mouseY <= 200:
+            setActiveScreen('drawCalendar')
 
 # class Account():
 #     def __init__(self, username, password):
