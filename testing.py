@@ -17,9 +17,9 @@ def onAppStart(app):
     # app.currentUser = None
 
     #calendar page variables
-    app.currYear = int(str(datetime.date.today())[0:4])
-    app.currMonth = int(str(datetime.date.today())[5:7])
-    app.currentDay = int(str(datetime.date.today())[9:11])
+    app.currYear = int(str(date.today()[0:4]))
+    app.currMonth = int(str(date.today())[5:7])
+    app.currentDay = int(str(date.today())[9:11])
     app.displayMonth = app.currMonth
     app.displayYear = app.currYear
     app.leftX, app.leftY = 433, 200
@@ -48,7 +48,6 @@ def onAppStart(app):
     #textBox app variables  
       
     # Get the current time
-    app.now = datetime.now()
     # Extract the hour
     app.currHour = app.now.hour
     if 5 <= app.currHour < 12:
@@ -189,7 +188,7 @@ def journalEntry_onMousePress(app, mouseX, mouseY):
         if (app.width/2+262.5 <= mouseX <= app.width/2+437.5) and (app.height/2+175<=mouseY<=app.height/2+225):
             app.cover = True
             app.popup = True
-            x = datetime.now()
+            x = date.now()
             for segment in app.entryList:
                 app.cohesiveEntry += segment
             app.calender[app.currYear, app.currMonth, app.currDay] = DailyEntry(app.cohesiveEntry, 'MOOD PLACEHOLDER')
